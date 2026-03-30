@@ -193,7 +193,7 @@ export default function ResultPage() {
               </div>
             )}
 
-            {(activeTab === 'all' || activeTab === 'all') && activeTab !== 'risks' && activeTab !== 'dates' && activeTab !== 'amounts' && (
+            {activeTab === 'all' && (
               <div>
                 <h2 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
                   <CheckCircle size={16} className="text-navy-600" /> Key Points

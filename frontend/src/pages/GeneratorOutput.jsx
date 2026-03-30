@@ -332,7 +332,7 @@ export default function GeneratorOutput() {
               onClick={handleDownload}
               className="btn-primary flex items-center justify-center gap-2 py-3.5"
             >
-              <Download size={16} /> Download PDF
+              <Download size={16} /> Download TXT
             </button>
             <button
               onClick={handleEmail}

@@ -111,10 +111,10 @@ export default function Navbar({ onMenuToggle, menuOpen }) {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-52 card-base animate-slide-up z-50">
                   <div className="p-1">
-                    <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                    <button onClick={() => { navigate('/profile'); closeAll(); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-700 hover:bg-slate-50 transition-colors">
                       <User size={15} className="text-slate-400" /> My Profile
                     </button>
-                    <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-700 hover:bg-slate-50 transition-colors">
+                    <button onClick={() => { navigate('/dashboard'); closeAll(); }} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-700 hover:bg-slate-50 transition-colors">
                       <Settings size={15} className="text-slate-400" /> Settings
                     </button>
                     <div className="border-t border-slate-100 mt-1 pt-1">

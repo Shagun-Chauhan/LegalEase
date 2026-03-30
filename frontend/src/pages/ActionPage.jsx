@@ -174,10 +174,7 @@ export default function ActionPage() {
                     <p className="text-xs text-slate-400">Click a step to mark as completed</p>
                   </div>
                 </div>
-                <div onClick={(e) => {
-                  const idx = parseInt(e.currentTarget.closest('[data-step]')?.dataset.step);
-                  if (!isNaN(idx)) toggleStep(idx);
-                }}>
+                <div>
                   <StepList steps={issue.steps} completedSteps={completedSteps} />
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2">
