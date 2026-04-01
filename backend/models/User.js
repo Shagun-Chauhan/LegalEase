@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     otpExpiry: Date,
     otpAttempts: { type: Number, default: 0 },
     resendAttempts: { type: Number, default: 0 },
-},{timestamps:true})
+    avatar: {
+        url: String,
+        public_id: String
+    },
+}, { timestamps: true })
 
-module.exports = mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);

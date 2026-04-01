@@ -12,9 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/location",require("./routes/locationRoutes"))
 
 app.get("/", (req, res) => {
-  res.send("LegalEase API Running");
+  res.send("Backend is running...");
 });
 
 const PORT = process.env.PORT || 5000;

@@ -1,16 +1,28 @@
 const jwt = require("jsonwebtoken");
 
-module.exports = (req,res,next)=>{
-    const token = req.headers.authorization;
-
-    if(!token){
-        return res.ststus(401).json({message:"No token provided"});
-    }
+const authMiddleware = (req, res, next) => {
     try {
-        const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader) {
+            return res.status(401).json({ message: "No token provided" });
+        }
+
+        const token = authHeader.split(" ")[1];
+
+        if (!token) {
+            return res.status(401).json({ message: "Token malformed" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
         req.user = decoded;
         next();
+
     } catch (error) {
-        return res.status(401).json({message : "Invalid token"});
+        console.log("JWT ERROR:", error.message);
+        res.status(401).json({ message: "Invalid token" });
     }
-}
+};
+
+module.exports = authMiddleware;

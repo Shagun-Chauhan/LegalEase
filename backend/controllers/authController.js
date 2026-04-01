@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
 const { generateOTP } = require("../utils/generateOTP");
+const cloudinary = require("cloudinary");
 
 exports.register = async (req, res) => {
   try {
@@ -30,7 +31,7 @@ exports.register = async (req, res) => {
     }
 
     user.otpHash = otpHash;
-    user.otpExpiry = Date.now() + 2 * 60 * 1000; 
+    user.otpExpiry = Date.now() + 2 * 60 * 1000;
     user.otpAttempts = 0;
     user.resendAttempts = 0;
 
@@ -122,7 +123,7 @@ exports.resendOtp = async (req, res) => {
     user.otpHash = otpHash;
     user.otpExpiry = Date.now() + 2 * 60 * 1000;
     user.resendAttempts += 1;
-    user.otpAttempts = 0; 
+    user.otpAttempts = 0;
 
     await user.save();
 
@@ -165,6 +166,81 @@ exports.login = async (req, res) => {
 
     res.json({ token, user });
 
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    res.json({
+      ...user._doc,
+      avatar: user.avatar?.url
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  try {   
+  const { name } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.name = name || user.name;
+
+    if (req.file) {
+      try {
+        if (user.avatar?.public_id) {
+          await cloudinary.uploader.destroy(user.avatar.public_id);
+        }
+      } catch (err) {
+        console.log("❌ Delete error:", err.message);
+      }
+    
+      user.avatar = {
+        url: req.file.path,
+        public_id: req.file.filename
+      };
+    }
+
+    await user.save();
+
+    res.json({
+      message: "Profile updated",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar?.url
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Incorrect current password" });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
