@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegalEase — Legal Document Analyzer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="home">
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="" width="40" height="40" class="logo" />
+      <span>LegalEase</span>
+    </a>
+    <nav class="nav">
+      <a href="upload.html">Analyze document</a>
+      <a href="results.html">Recent results</a>
+    </nav>
+  </header>
+
+  <main class="main narrow">
+    <section class="hero">
+      <h1>AI-powered legal document analysis</h1>
+      <p class="lead">
+        Upload contracts, notices, or filings (PDF, DOCX, TXT). LegalEase extracts the text,
+        uses <strong>Google Gemini</strong> to summarize and predict process type, timeline,
+        cost band, and success outlook — then stores everything in <strong>MongoDB Atlas</strong>.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="upload.html">Start upload</a>
+        <a class="btn btn-ghost" href="results.html">View stored results</a>
+      </div>
+      <p class="fine-print">
+        For academic / demonstration use only — not legal advice. Configure <code>GEMINI_API_KEY</code>
+        and <code>MONGODB_URI</code> in <code>backend/.env</code>.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>LegalEase &middot; Full stack demo (Express + MongoDB + Gemini)</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

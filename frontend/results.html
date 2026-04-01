@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegalEase — Analysis results</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="results">
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="" width="40" height="40" class="logo" />
+      <span>LegalEase</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="upload.html">Upload</a>
+    </nav>
+  </header>
+
+  <main class="main wide">
+    <h1>Analysis results</h1>
+    <p id="resultsIntro" class="sub">Loading…</p>
+
+    <section id="detailSection" class="hidden">
+      <div class="meta-bar">
+        <span><strong>File:</strong> <span id="metaFile">—</span></span>
+        <span><strong>Uploaded:</strong> <span id="metaDate">—</span></span>
+        <span><strong>ID:</strong> <code id="metaId">—</code></span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table" aria-describedby="resultsIntro">
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">AI analysis</th>
+            </tr>
+          </thead>
+          <tbody id="detailTableBody">
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="listSection" class="card-panel">
+      <h2>Recent analyses</h2>
+      <p class="sub">Latest records from MongoDB (newest first).</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">File name</th>
+              <th scope="col">Process type</th>
+              <th scope="col">Risk</th>
+              <th scope="col">Uploaded</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody id="listTableBody">
+            <tr><td colspan="5">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Open a specific analysis with <code>?id=&lt;documentId&gt;</code> in the URL.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

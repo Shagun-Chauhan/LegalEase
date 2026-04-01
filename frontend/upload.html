@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegalEase — Upload</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-page="upload">
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <img src="assets/logo.png" alt="" width="40" height="40" class="logo" />
+      <span>LegalEase</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="results.html">Recent results</a>
+    </nav>
+  </header>
+
+  <main class="main narrow">
+    <h1>Upload document</h1>
+    <p class="sub">PDF, DOCX, or plain text · up to 15 MB</p>
+
+    <form id="uploadForm" class="upload-form card-panel">
+      <label class="file-field">
+        <span class="label">File</span>
+        <input
+          type="file"
+          id="fileInput"
+          name="document"
+          accept=".pdf,.docx,.txt,.text,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+          required
+        />
+      </label>
+      <button type="submit" id="submitBtn" class="btn btn-primary">Analyze with AI</button>
+    </form>
+
+    <p id="statusMsg" class="status-msg" role="status" aria-live="polite"></p>
+  </main>
+
+  <footer class="site-footer">
+    <p>After a successful run you are redirected to the results table.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
