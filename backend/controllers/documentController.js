@@ -1,7 +1,4 @@
-/**
- * Multer upload → parse text → Gemini → save Document → JSON.
- * Plus list / get-by-id for the results UI.
- */
+
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
@@ -13,6 +10,13 @@ const { cleanText, hasMinContent, validateFile } = require("../utils/textExtract
 
 const uploadsDir = path.join(__dirname, "..", "uploads");
 
+
+const crypto = require("crypto");
+
+function generateFileHash(filePath) {
+  const buffer = fs.readFileSync(filePath);
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -25,6 +29,7 @@ const storage = multer.diskStorage({
     cb(null, unique + ext);
   },
 });
+
 
 function fileFilter(req, file, cb) {
   const ext = path.extname(file.originalname || "").toLowerCase();
@@ -49,10 +54,12 @@ const upload = multer({
 
 function serializeDoc(doc) {
   const d = doc.toObject ? doc.toObject() : doc;
+
   return {
     id: d._id,
     originalFileName: d.originalFileName,
     uploadedAt: d.uploadedAt,
+
     documentSummary: d.documentSummary,
     keyPoints: d.keyPoints,
     legalProcessType: d.legalProcessType,
@@ -61,127 +68,131 @@ function serializeDoc(doc) {
     successProbability: d.successProbability,
     riskAnalysis: d.riskAnalysis,
     riskLevel: d.riskLevel,
+    riskScore: d.riskScore,
+    dominantParty: d.dominantParty,
+    redFlags: d.redFlags,
+    simpleExplanation: d.simpleExplanation,
   };
 }
 
 async function uploadDocument(req, res) {
   console.log(`[${new Date().toISOString()}] Upload request received`);
-  
+
   if (!req.file) {
-    console.error('No file uploaded in request');
     return res.status(400).json({ error: "No file uploaded." });
+  }
+
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const filePath = req.file.path;
   const originalFileName = req.file.originalname || "unknown";
 
-  console.log(`Processing file: ${originalFileName}, path: ${filePath}`);
-
   try {
-    // Validate file exists
     if (!validateFile(filePath)) {
       throw new Error("Uploaded file is not accessible");
     }
 
-    console.log('Extracting text from document...');
     const extractedText = await extractText(filePath, originalFileName);
     const cleanedText = cleanText(extractedText);
 
-    console.log(`Extracted ${cleanedText.length} characters of text`);
-
     if (!hasMinContent(cleanedText, 10)) {
-      console.warn('Insufficient text extracted from document');
       return res.status(400).json({
-        error:
-          "Could not extract enough text from the file. Try another PDF, DOCX, or TXT.",
+        error: "Not enough text extracted",
       });
     }
 
-    console.log('Analyzing document with AI...');
+    // ✅ HASH
+    const fileHash = generateFileHash(filePath);
+
+    // ✅ CHECK DUPLICATE FOR SAME USER
+    const existing = await Document.findOne({
+      fileHash,
+      user: req.user.id,
+    });
+
+    if (existing) {
+      return res.json({
+        success: true,
+        message: "Already analyzed",
+        ...serializeDoc(existing),
+      });
+    }
+
+    // ✅ AI CALL
     const ai = await analyzeLegalDocument(cleanedText);
-    
-    console.log('AI analysis completed, saving to database...');
+
+    // ✅ SAVE WITH USER
     const doc = await Document.create({
+      user: req.user.id,
+      fileHash,
       originalFileName,
+
       documentSummary: ai.documentSummary,
-      keyPoints: ai.keyPoints,
+      keyPoints: Array.isArray(ai.keyPoints)
+        ? ai.keyPoints
+        : [ai.keyPoints],
+
       legalProcessType: ai.legalProcessType,
       estimatedTime: ai.estimatedTime,
       estimatedCost: ai.estimatedCost,
       successProbability: ai.successProbability,
       riskAnalysis: ai.riskAnalysis,
       riskLevel: ai.riskLevel,
+      riskScore: ai.riskScore,
+      dominantParty: ai.dominantParty,
+      redFlags: ai.redFlags,
+      simpleExplanation: ai.simpleExplanation,
     });
 
-    console.log(`Document saved with ID: ${doc._id}`);
     return res.status(201).json({
       success: true,
       ...serializeDoc(doc),
     });
-  } catch (err) {
-    console.error("uploadDocument error:", {
-      message: err.message,
-      stack: err.stack,
-      fileName: originalFileName
-    });
-    
-    const msg = err?.message ? String(err.message) : String(err);
-    const isAiFailure =
-      msg.includes("AI") ||
-      msg.includes("GEMINI") ||
-      msg.includes("model call failed") ||
-      msg.includes("parseModelJson");
 
-    return res.status(isAiFailure ? 502 : 500).json({
-      error: msg || "Processing failed. Check server logs and .env.",
+  } catch (err) {
+    console.error("uploadDocument error:", err.message);
+
+    return res.status(500).json({
+      error: err.message || "Processing failed",
     });
+
   } finally {
     try {
-      if (fs.existsSync(filePath)) {
+      if (filePath && fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
-        console.log(`Cleaned up temporary file: ${filePath}`);
       }
-    } catch (unlinkErr) {
-      console.warn("Could not delete temp file:", unlinkErr.message);
+    } catch (cleanupError) {
+      console.error("Cleanup error in documentController:", cleanupError.message);
     }
   }
 }
 
-/** GET /api/documents — recent analyses for optional dashboard use */
 async function listDocuments(req, res) {
-  console.log(`[${new Date().toISOString()}] List documents request received`);
-  
   try {
-    const rows = await Document.find()
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const rows = await Document.find({ user: req.user.id })
       .sort({ uploadedAt: -1 })
       .limit(50)
       .lean();
 
-    console.log(`Found ${rows.length} documents in database`);
-
-    const documents = rows.map((d) => ({
-      id: d._id,
-      originalFileName: d.originalFileName,
-      uploadedAt: d.uploadedAt,
-      legalProcessType: d.legalProcessType,
-      riskLevel: d.riskLevel,
-    }));
+    const documents = rows.map((d) => serializeDoc(d));
 
     return res.json({ documents });
+
   } catch (err) {
-    console.error("listDocuments error:", {
-      message: err.message,
-      stack: err.stack
-    });
+    console.error("listDocuments error:", err.message);
     return res.status(500).json({ error: err.message });
   }
 }
-
-/** GET /api/documents/:id — single record for results.html */
 async function getDocument(req, res) {
   const { id } = req.params;
   console.log(`[${new Date().toISOString()}] Get document request for ID: ${id}`);
-  
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     console.warn(`Invalid document ID requested: ${id}`);
     return res.status(400).json({ error: "Invalid document id." });
@@ -193,7 +204,7 @@ async function getDocument(req, res) {
       console.warn(`Document not found: ${id}`);
       return res.status(404).json({ error: "Document not found." });
     }
-    
+
     console.log(`Document found: ${doc.originalFileName}`);
     return res.json(serializeDoc(doc));
   } catch (err) {
@@ -205,10 +216,68 @@ async function getDocument(req, res) {
     return res.status(500).json({ error: err.message });
   }
 }
+async function deleteDocument(req, res) {
+  const { id } = req.params;
+
+  try {
+    const doc = await Document.findOneAndDelete({
+      _id: id,
+      user: req.user.id,
+    });
+
+    if (!doc) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+
+    res.json({ success: true, message: "Deleted successfully" });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+async function getDashboardStats(req, res) {
+  try {
+    const docs = await Document.find({ user: req.user.id })
+      .sort({ uploadedAt: -1 })
+      .lean();
+
+    const totalDocuments = docs.length;
+    const highRiskCount = docs.filter(d => d.riskLevel === "High").length;
+    
+    let totalRiskScore = 0;
+    docs.forEach(d => {
+      totalRiskScore += (d.riskScore || 0);
+    });
+    const avgRiskScore = totalDocuments > 0 ? (totalRiskScore / totalDocuments).toFixed(1) : 0;
+
+    // Recent activity (last 5)
+    const recentActivity = docs.slice(0, 5).map(doc => ({
+      id: doc._id,
+      title: doc.originalFileName,
+      type: "Document",
+      status: "completed", // Since it's in DB, it's processed
+      time: doc.uploadedAt,
+      riskLevel: doc.riskLevel
+    }));
+
+    res.json({
+      totalDocuments,
+      highRiskCount,
+      avgRiskScore,
+      recentActivity
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
 
 module.exports = {
   upload,
   uploadDocument,
   listDocuments,
   getDocument,
+  deleteDocument,
+  getDashboardStats,
 };

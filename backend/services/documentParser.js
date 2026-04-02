@@ -1,17 +1,9 @@
-/**
- * Extracts plain text from uploaded files.
- * PDF → pdf-parse, DOCX → mammoth, TXT → fs read.
- */
+
 const fs = require("fs");
 const path = require("path");
 const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 
-/**
- * @param {string} filePath - Absolute path to the stored upload
- * @param {string} originalName - Original client filename (for extension)
- * @returns {Promise<string>} Extracted text
- */
 async function extractText(filePath, originalName) {
   const ext = path.extname(originalName || filePath).toLowerCase();
 

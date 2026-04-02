@@ -1,8 +1,4 @@
-/**
- * Predict risk level (Low / Medium / High) from AI-generated risk analysis text.
- *
- * This file intentionally does NOT call another AI model to keep the demo fast/reliable.
- */
+
 
 function predictRiskLevel(riskAnalysisText) {
   const text = String(riskAnalysisText || "").trim();
@@ -10,14 +6,12 @@ function predictRiskLevel(riskAnalysisText) {
 
   if (!text) return "Medium";
 
-  // If Gemini already used explicit words, trust them.
   if (/\bhigh\b/.test(t) || /\bmajor\b/.test(t) || /\bsevere\b/.test(t))
     return "High";
   if (/\blow\b/.test(t) || /\bminor\b/.test(t) || /\blimited\b/.test(t))
     return "Low";
   if (/\bmedium\b/.test(t) || /\bmoderate\b/.test(t)) return "Medium";
 
-  // Heuristic signals: deadlines + default/termination/penalties tend to increase risk.
   const highSignals = [
     "termination",
     "eviction",
