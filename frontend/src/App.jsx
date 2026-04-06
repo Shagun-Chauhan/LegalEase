@@ -1,8 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
+import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import OTP from './pages/OTP';
 import Dashboard from './pages/Dashboard';
 import IssueSelection from './pages/IssueSelection';
@@ -12,6 +14,7 @@ import ResultPage from './pages/ResultPage';
 import GeneratorForm from './pages/GeneratorForm';
 import GeneratorOutput from './pages/GeneratorOutput';
 import Profile from './pages/Profile';
+import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
   return (
@@ -19,17 +22,77 @@ export default function App() {
       <Toaster position="top-center" reverseOrder={false} />
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/otp" element={<OTP />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/issues" element={<IssueSelection />} />
-          <Route path="/action" element={<ActionPage />} />
-          <Route path="/upload" element={<UploadPage />} />
-          <Route path="/result" element={<ResultPage />} />
-          <Route path="/generate" element={<GeneratorForm />} />
-          <Route path="/generate/output" element={<GeneratorOutput />} />
-          <Route path="/profile" element={<Profile />} />
+
+          {/* Protected Routes */}
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/issues" 
+            element={
+              <ProtectedRoute>
+                <IssueSelection />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/action" 
+            element={
+              <ProtectedRoute>
+                <ActionPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/upload" 
+            element={
+              <ProtectedRoute>
+                <UploadPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/result" 
+            element={
+              <ProtectedRoute>
+                <ResultPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/generate" 
+            element={
+              <ProtectedRoute>
+                <GeneratorForm />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/generate/output" 
+            element={
+              <ProtectedRoute>
+                <GeneratorOutput />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </Router>
     </ThemeProvider>

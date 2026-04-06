@@ -127,53 +127,55 @@ export default function IssueSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} user={user} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className="md:ml-64 pt-16">
-        <div className="p-5 md:p-7 max-w-5xl mx-auto">
+      <main className={`transition-all duration-500 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} pt-20`}>
+        <div className="p-6 md:p-10 max-w-7xl mx-auto">
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-xs text-slate-400 mb-5">
-            <span className="cursor-pointer hover:text-navy-600" onClick={() => navigate('/dashboard')}>Dashboard</span>
-            <ChevronRight size={12} />
-            <span className="text-slate-700 font-medium">Select Legal Issue</span>
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-8">
+            <span className="cursor-pointer hover:text-navy-600 transition-colors" onClick={() => navigate('/dashboard')}>Dashboard</span>
+            <ChevronRight size={10} strokeWidth={3} />
+            <span className="text-slate-900 dark:text-slate-300">Select Issue</span>
           </div>
 
           {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center gap-2 mb-1">
-              <Scale size={18} className="text-navy-600" />
-              <p className="section-label">Legal Guidance</p>
+          <div className="mb-10">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-lg bg-navy-100 dark:bg-navy-950/40 flex items-center justify-center border border-navy-200/50 dark:border-navy-800/30">
+                <Scale size={18} className="text-navy-700 dark:text-navy-400" />
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-navy-600 dark:text-navy-400">Legal Help</p>
             </div>
-            <h1 className="page-title">What's your legal concern?</h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Select the category that best describes your issue to get step-by-step legal guidance.
+            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight uppercase mb-2">What is your concern?</h1>
+            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
+              Select the category that best describes your situation. We'll provide specific legal frameworks, documentation checklists, and procedural guidance tailored to your needs.
             </p>
           </div>
 
           {/* Search */}
-          <div className="relative mb-6 max-w-md">
-            <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <div className="relative mb-10 max-w-xl group">
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors" />
             <input
               type="text"
-              placeholder="Search legal issues..."
+              placeholder="Search legal issues, laws, or keywords..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="input-field pl-10"
+              className="input-field pl-12 py-4 text-sm font-medium shadow-xl shadow-slate-200 dark:shadow-none"
             />
           </div>
 
           {/* Category Grid */}
           {filtered.length === 0 ? (
-            <div className="text-center py-16 card-base">
-              <Scale size={36} className="text-slate-300 mx-auto mb-3" />
-              <h3 className="font-semibold text-slate-600 mb-1">No issues found</h3>
-              <p className="text-sm text-slate-400">Try a different search term</p>
+            <div className="text-center py-20 card-base border-dashed bg-slate-50/50 dark:bg-slate-900/20">
+              <Scale size={48} className="text-slate-200 dark:text-slate-800 mx-auto mb-4" />
+              <h3 className="font-display text-xl font-black text-slate-400 dark:text-slate-600 uppercase tracking-tighter">No matching issues found</h3>
+              <p className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-2">Try adjusting your search filters</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filtered.map(cat => {
                 const Icon = cat.icon;
                 const isSelected = selected === cat.id;
@@ -181,21 +183,34 @@ export default function IssueSelection() {
                   <div
                     key={cat.id}
                     onClick={() => handleSelect(cat.id)}
-                    className={`card-base card-hover p-5 group ${isSelected ? 'ring-2 ring-navy-500 ring-offset-2 bg-navy-50' : ''}`}
+                    className={`card-base p-6 group cursor-pointer transition-all duration-300 relative overflow-hidden flex flex-col h-full
+                      ${isSelected 
+                        ? 'ring-2 ring-navy-500 bg-navy-50/50 dark:bg-navy-950/20' 
+                        : 'hover:shadow-2xl hover:shadow-slate-200 dark:hover:shadow-navy hover:border-navy-200 dark:hover:border-navy-800/50 hover:-translate-y-1'
+                      }`}
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className={`w-11 h-11 rounded-xl ${cat.iconBg} flex items-center justify-center group-hover:scale-110 transition-transform duration-200`}>
-                        <Icon size={20} className={cat.iconColor} />
+                    <div className="absolute -top-12 -right-12 w-24 h-24 bg-navy-500/5 dark:bg-navy-500/10 rounded-full group-hover:scale-110 transition-transform duration-700" />
+                    
+                    <div className="flex items-start justify-between mb-5 relative z-10">
+                      <div className={`w-12 h-12 rounded-2xl ${cat.iconBg} dark:bg-opacity-10 flex items-center justify-center transition-transform group-hover:scale-110 border border-white/20 dark:border-white/5 shadow-sm`}>
+                        <Icon size={24} className={cat.iconColor} />
                       </div>
-                      <span className={`badge ${cat.tagColor} text-[10px]`}>{cat.tag}</span>
+                      <span className={`px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest border ${cat.tagColor.replace('badge-', 'border-').replace('red', 'red-500/20').replace('yellow', 'amber-500/20').replace('blue', 'blue-500/20').replace('green', 'emerald-500/20')} ${cat.iconColor} bg-white dark:bg-slate-900 shadow-sm`}>
+                        {cat.tag}
+                      </span>
                     </div>
-                    <h3 className="font-semibold text-slate-900 text-sm mb-1.5 group-hover:text-navy-700 transition-colors">
+
+                    <h3 className="font-display text-lg font-black text-slate-900 dark:text-white tracking-tight group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors mb-2">
                       {cat.title}
                     </h3>
-                    <p className="text-xs text-slate-500 leading-relaxed mb-3">{cat.description}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-slate-400 font-medium">{cat.count}</span>
-                      <ArrowRight size={14} className="text-navy-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-grow">{cat.description}</p>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/5 relative z-10">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">{cat.count}</span>
+                      <div className="flex items-center gap-1.5 text-navy-600 dark:text-navy-400">
+                        <span className="text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">Select</span>
+                        <ArrowRight size={16} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
                   </div>
                 );
@@ -204,15 +219,21 @@ export default function IssueSelection() {
           )}
 
           {/* Help Banner */}
-          <div className="mt-7 p-5 rounded-2xl bg-navy-50 border border-navy-100 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-navy-100 flex items-center justify-center flex-shrink-0">
-              <Scale size={18} className="text-navy-600" />
+          <div className="mt-12 p-8 rounded-[2rem] bg-navy-900 dark:bg-navy-900/40 border border-navy-800/50 dark:border-navy-700/30 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden shadow-2xl shadow-navy">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-navy-500/10 rounded-full blur-3xl -mr-32 -mt-32" />
+            
+            <div className="w-16 h-16 rounded-[1.25rem] bg-navy-800 dark:bg-navy-950 flex items-center justify-center flex-shrink-0 border border-navy-700/50 shadow-xl relative z-10">
+              <Scale size={32} className="text-navy-400" strokeWidth={1.5} />
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-navy-800">Can't find your issue?</p>
-              <p className="text-xs text-navy-600 mt-0.5">Describe your problem and our AI will match the right legal pathway for you.</p>
+            
+            <div className="flex-1 text-center md:text-left relative z-10">
+              <h4 className="font-display text-lg font-bold text-white tracking-tight uppercase mb-1">In doubt? Consult AI Assistant</h4>
+              <p className="text-[10px] font-bold text-navy-400 uppercase tracking-widest leading-relaxed">Describe your unique problem and our system will map out the correct legal pathway for you.</p>
             </div>
-            <button className="btn-primary text-sm px-4 py-2 flex-shrink-0">Ask AI</button>
+            
+            <button className="bg-white hover:bg-navy-50 text-navy-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl relative z-10 group flex items-center gap-2">
+              Start Session <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
+            </button>
           </div>
 
         </div>

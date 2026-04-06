@@ -96,7 +96,7 @@ exports.verifyOtp = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false, // development
+      secure: false,
       sameSite: "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -192,8 +192,8 @@ exports.getProfile = async (req, res) => {
 };
 
 exports.updateProfile = async (req, res) => {
-  try {   
-  const { name } = req.body;
+  try {
+    const { name } = req.body;
 
     const user = await User.findById(req.user.id);
 
@@ -209,7 +209,7 @@ exports.updateProfile = async (req, res) => {
       } catch (err) {
         console.log("❌ Delete error:", err.message);
       }
-    
+
       user.avatar = {
         url: req.file.path,
         public_id: req.file.filename

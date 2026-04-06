@@ -1,15 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield, CheckCircle } from 'lucide-react';
+import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import authService from "../services/authService";
 
 const Field = ({ label, error, children }) => (
-  <div>
-    <label className="block text-sm font-semibold text-slate-700 mb-1.5">{label}</label>
+  <div className="space-y-2">
+    <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 pl-1">{label}</label>
     {children}
     {error && (
-      <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1.5">
-        <span className="w-3.5 h-3.5 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 text-[9px] font-bold">!</span>
+      <p className="text-[10px] font-bold text-red-500 mt-1.5 flex items-center gap-1.5 pl-1 uppercase tracking-tight">
+        <AlertCircle size={12} strokeWidth={3} />
         {error}
       </p>
     )}
@@ -121,34 +121,35 @@ export default function Login() {
   const strength = mode === 'signup' ? getPasswordStrength(password) : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-navy-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Dynamic Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-navy-100 rounded-full opacity-30 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-100 rounded-full opacity-30 blur-3xl" />
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-navy-500/10 dark:bg-navy-500/5 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
-      <div className="relative w-full max-w-md animate-slide-up">
+      <div className="relative w-full max-w-sm animate-slide-up">
 
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-navy-700 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-navy">
-            <Scale size={30} className="text-white" />
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 bg-navy-700 rounded-[2rem] mx-auto mb-6 flex items-center justify-center shadow-2xl shadow-navy group transition-all hover:rotate-6 active:scale-95 cursor-pointer">
+            <Scale size={36} className="text-white" />
           </div>
-          <h1 className="font-display text-3xl font-bold text-slate-900 mb-1">LegalEase</h1>
-          <p className="text-slate-500 text-sm">Your Smart Legal Companion</p>
+          <h1 className="font-display text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter uppercase">LegalEase</h1>
+          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">Your Smart Legal Companion</p>
         </div>
 
         {/* Mode tabs */}
-        <div className="flex bg-slate-100 rounded-xl p-1 mb-5">
+        <div className="flex bg-slate-200/50 dark:bg-slate-900/50 backdrop-blur-md rounded-2xl p-1.5 mb-8 border border-slate-200 dark:border-white/5">
           <button
             onClick={() => switchMode('login')}
-            className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === 'login' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'
+            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${mode === 'login' ? 'bg-white dark:bg-slate-800 shadow-xl text-navy-700 dark:text-white' : 'text-slate-500 dark:text-slate-500 hover:text-navy-600'
               }`}
           >
             Sign In
           </button>
           <button
             onClick={() => switchMode('signup')}
-            className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${mode === 'signup' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'
+            className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${mode === 'signup' ? 'bg-white dark:bg-slate-800 shadow-xl text-navy-700 dark:text-white' : 'text-slate-500 dark:text-slate-500 hover:text-navy-600'
               }`}
           >
             Create Account
@@ -156,51 +157,52 @@ export default function Login() {
         </div>
 
         {/* Card */}
-        <div className="card-base p-8">
+        <div className="card-base p-8 md:p-10 shadow-2xl shadow-slate-200 dark:shadow-none border-slate-200 dark:border-white/10 relative overflow-hidden group">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-navy-500/5 dark:bg-navy-500/10 rounded-full group-hover:scale-110 transition-transform duration-700" />
 
           {/* ── SIGN IN ── */}
           {mode === 'login' && (
             <>
-              <div className="mb-6">
-                <h2 className="font-display text-xl font-semibold text-slate-900 mb-1">Welcome back</h2>
-                <p className="text-sm text-slate-500">Sign in to your LegalEase account</p>
+              <div className="mb-8 relative z-10">
+                <h1 className="font-display text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight mb-2">Login</h1>
+                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Sign in to your LegalEase vault</p>
               </div>
 
-              <div className="space-y-4">
-                <Field label="Email Address" error={errors.email}>
-                  <div className="relative">
-                    <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+              <div className="space-y-6 relative z-10">
+                <Field label="Identity / Email" error={errors.email}>
+                  <div className="relative group">
+                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                     <input
                       type="email"
                       value={email}
                       onChange={e => { setEmail(e.target.value); setErrors(p => ({ ...p, email: '' })); }}
                       onKeyDown={handleKeyDown}
-                      placeholder="you@example.com"
+                      placeholder="name@vault.com"
                       autoComplete="email"
-                      className={`input-field pl-10 ${errors.email ? 'border-red-300 focus:ring-red-400' : ''}`}
+                      className={`input-field pl-12 py-3.5 text-sm font-medium ${errors.email ? 'border-red-300 focus:ring-red-400' : ''}`}
                     />
                   </div>
                 </Field>
 
-                <Field label="Password" error={errors.password}>
-                  <div className="relative">
-                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Field label="Secret Password" error={errors.password}>
+                  <div className="relative group">
+                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={e => { setPassword(e.target.value); setErrors(p => ({ ...p, password: '' })); }}
                       onKeyDown={handleKeyDown}
-                      placeholder="Enter your password"
+                      placeholder="••••••••"
                       autoComplete="current-password"
-                      className={`input-field pl-10 pr-11 ${errors.password ? 'border-red-300 focus:ring-red-400' : ''}`}
+                      className={`input-field pl-12 pr-12 py-3.5 text-sm font-medium ${errors.password ? 'border-red-300 focus:ring-red-400' : ''}`}
                     />
                     <button
                       type="button"
                       onMouseDown={handleTogglePassword}
                       tabIndex={-1}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors p-1"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors p-1"
                     >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </Field>
@@ -208,9 +210,9 @@ export default function Login() {
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full bg-navy-700 hover:bg-navy-800 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-navy transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group flex items-center justify-center gap-3"
                 >
-                  {loading ? <span className="spinner" /> : <> Sign In <ArrowRight size={16} /> </>}
+                  {loading ? <Loader2 className="animate-spin" size={18} /> : <> Login <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /> </>}
                 </button>
               </div>
             </>
@@ -219,13 +221,13 @@ export default function Login() {
           {/* ── SIGN UP ── */}
           {mode === 'signup' && (
             <>
-              <div className="mb-6">
-                <h2 className="font-display text-xl font-semibold text-slate-900 mb-1">Create your account</h2>
-                <p className="text-sm text-slate-500">Get free access to legal guidance and tools</p>
+              <div className="mb-8 relative z-10">
+                <h2 className="font-display text-2xl font-black text-slate-900 dark:text-white tracking-tighter uppercase mb-1">Create Account</h2>
+                <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Get free access to premium legal tools</p>
               </div>
 
-              <div className="space-y-4">
-                <Field label="Full Name" error={errors.fullName}>
+              <div className="space-y-5 relative z-10">
+                <Field label="Full Legal Name" error={errors.fullName}>
                   <input
                     type="text"
                     value={fullName}
@@ -233,28 +235,28 @@ export default function Login() {
                     onKeyDown={handleKeyDown}
                     placeholder="Arjun Kumar Sharma"
                     autoComplete="name"
-                    className={`input-field ${errors.fullName ? 'border-red-300 focus:ring-red-400' : ''}`}
+                    className={`input-field py-3.5 text-sm font-medium ${errors.fullName ? 'border-red-300 focus:ring-red-400' : ''}`}
                   />
                 </Field>
 
                 <Field label="Email Address" error={errors.email}>
-                  <div className="relative">
-                    <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <div className="relative group">
+                    <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                     <input
                       type="email"
                       value={email}
                       onChange={e => { setEmail(e.target.value); setErrors(p => ({ ...p, email: '' })); }}
                       onKeyDown={handleKeyDown}
-                      placeholder="you@example.com"
+                      placeholder="name@vault.com"
                       autoComplete="email"
-                      className={`input-field pl-10 ${errors.email ? 'border-red-300 focus:ring-red-400' : ''}`}
+                      className={`input-field pl-12 py-3.5 text-sm font-medium ${errors.email ? 'border-red-300 focus:ring-red-400' : ''}`}
                     />
                   </div>
                 </Field>
 
-                <Field label="Password" error={errors.password}>
-                  <div className="relative">
-                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Field label="Secure Password" error={errors.password}>
+                  <div className="relative group">
+                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
@@ -262,46 +264,46 @@ export default function Login() {
                       onKeyDown={handleKeyDown}
                       placeholder="Min. 8 characters"
                       autoComplete="new-password"
-                      className={`input-field pl-10 pr-11 ${errors.password ? 'border-red-300 focus:ring-red-400' : ''}`}
+                      className={`input-field pl-12 pr-12 py-3.5 text-sm font-medium ${errors.password ? 'border-red-300 focus:ring-red-400' : ''}`}
                     />
                     <button
                       type="button"
                       onMouseDown={handleTogglePassword}
                       tabIndex={-1}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors p-1"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors p-1"
                     >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                   {password && strength && (
-                    <div className="mt-2">
-                      <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full transition-all duration-300 ${strength.color} ${strength.width}`} />
+                    <div className="mt-3 px-1">
+                      <div className="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div className={`h-full rounded-full transition-all duration-500 ${strength.color} ${strength.width} shadow-sm shadow-inherit`} />
                       </div>
-                      <p className={`text-xs mt-1 font-semibold ${strength.text}`}>{strength.label} password</p>
+                      <p className={`text-[10px] mt-2 font-black uppercase tracking-widest ${strength.text}`}>{strength.label} Strength</p>
                     </div>
                   )}
                 </Field>
 
-                <Field label="Confirm Password" error={errors.confirmPassword}>
-                  <div className="relative">
-                    <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                <Field label="Match Password" error={errors.confirmPassword}>
+                  <div className="relative group">
+                    <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                     <input
                       type={showConfirm ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={e => { setConfirmPassword(e.target.value); setErrors(p => ({ ...p, confirmPassword: '' })); }}
                       onKeyDown={handleKeyDown}
-                      placeholder="Re-enter your password"
+                      placeholder="Repeat password"
                       autoComplete="new-password"
-                      className={`input-field pl-10 pr-11 ${errors.confirmPassword ? 'border-red-300 focus:ring-red-400' : ''}`}
+                      className={`input-field pl-12 pr-12 py-3.5 text-sm font-medium ${errors.confirmPassword ? 'border-red-300 focus:ring-red-400' : ''}`}
                     />
                     <button
                       type="button"
                       onMouseDown={handleToggleConfirm}
                       tabIndex={-1}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors p-1"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors p-1"
                     >
-                      {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </Field>
@@ -309,9 +311,9 @@ export default function Login() {
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="w-full bg-navy-700 hover:bg-navy-800 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl shadow-navy transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed group flex items-center justify-center gap-3 mt-4"
                 >
-                  {loading ? <span className="spinner" /> : <> Create Account <ArrowRight size={16} /> </>}
+                  {loading ? <Loader2 className="animate-spin" size={18} /> : <> Register <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /> </>}
                 </button>
               </div>
             </>
@@ -319,22 +321,26 @@ export default function Login() {
         </div>
 
         {/* Trust indicators */}
-        <div className="flex items-center justify-center gap-6 mt-6">
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Shield size={12} className="text-emerald-500" />
-            <span>256-bit encrypted</span>
+        <div className="flex items-center justify-center gap-8 mt-10">
+          <div className="flex items-center gap-2 transition-all hover:scale-105">
+            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center text-emerald-600 dark:text-emerald-500">
+              <Shield size={14} strokeWidth={3} />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Encrypted</span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <CheckCircle size={12} className="text-navy-500" />
-            <span>No spam, ever</span>
+          <div className="flex items-center gap-2 transition-all hover:scale-105">
+            <div className="w-8 h-8 rounded-full bg-navy-100 dark:bg-navy-950/40 flex items-center justify-center text-navy-600 dark:text-navy-400">
+              <CheckCircle size={14} strokeWidth={3} />
+            </div>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Secure</span>
           </div>
         </div>
 
-        <p className="text-center text-xs text-slate-400 mt-4">
+        <p className="text-center text-[10px] font-bold text-slate-400 dark:text-slate-600 mt-8 uppercase tracking-widest leading-relaxed">
           By continuing, you agree to our{' '}
-          <span className="text-navy-600 underline cursor-pointer">Terms of Service</span>
+          <span className="text-navy-600 dark:text-navy-400 underline decoration-navy-500/30 underline-offset-4 cursor-pointer hover:text-navy-700 transition-colors">Terms</span>
           {' '}and{' '}
-          <span className="text-navy-600 underline cursor-pointer">Privacy Policy</span>
+          <span className="text-navy-600 dark:text-navy-400 underline decoration-navy-500/30 underline-offset-4 cursor-pointer hover:text-navy-700 transition-colors">Privacy</span>
         </p>
       </div>
     </div>

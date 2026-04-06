@@ -62,7 +62,7 @@ export default function Dashboard() {
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} user={user} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className="md:ml-64 pt-16">
+      <main className={`transition-all duration-500 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} pt-20`}>
         <div className="p-5 md:p-7 max-w-6xl mx-auto">
 
           {/* Welcome Banner */}
@@ -73,9 +73,9 @@ export default function Dashboard() {
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles size={14} className="text-amber-300" />
-                <span className="text-xs font-bold uppercase tracking-wider text-navy-200">Legal Management</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-navy-200">Legal Assistant</span>
               </div>
-              <h2 className="font-display text-2xl md:text-3xl font-bold mb-2">Hello, {user?.name.split(' ')[0] || 'User'} 👋</h2>
+              <h2 className="font-display text-xl md:text-2xl font-bold mb-2">Hello, {user?.name.split(' ')[0] || 'User'} 👋</h2>
               <p className="text-navy-200 text-sm max-w-lg leading-relaxed">
                 You have <span className="text-white font-semibold">{stats.totalDocuments} document{stats.totalDocuments !== 1 ? 's' : ''}</span> analyzed.
                 Keep track of your legal activities easily.
@@ -92,14 +92,14 @@ export default function Dashboard() {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
             {statCards.map(({ label, value, icon: Icon, color, bg }) => (
-              <div key={label} className="card-base p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center`}>
-                    <Icon size={15} className={color} />
+              <div key={label} className="card-base p-5 group hover:scale-[1.02] transition-all">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className={`w-10 h-10 rounded-xl ${bg} dark:bg-opacity-20 flex items-center justify-center border dark:border-transparent group-hover:rotate-6 transition-transform`}>
+                    <Icon size={18} className={color} />
                   </div>
                 </div>
-                <p className="font-display text-2xl font-bold text-slate-900">{value}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{label}</p>
+                <p className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{value}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-1">{label}</p>
               </div>
             ))}
           </div>
@@ -107,9 +107,9 @@ export default function Dashboard() {
           {/* Main Action Cards */}
           <div className="mb-2">
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="section-label">Quick Actions</p>
-                <h3 className="font-display text-lg font-semibold text-slate-900 mt-0.5">What do you need help with?</h3>
+              <div className="mb-6">
+                <p className="section-label mb-1">Actions</p>
+                <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white tracking-tight">Need help with something?</h3>
               </div>
             </div>
 
@@ -165,27 +165,27 @@ export default function Dashboard() {
                   View All
                 </button>
               </div>
-              <div className="divide-y divide-slate-50">
+              <div className="divide-y divide-slate-100 dark:divide-white/5">
                 {stats.recentActivity.length > 0 ? (
                   stats.recentActivity.map((item, i) => (
                     <div
                       key={item.id}
                       onClick={() => navigate('/upload')}
-                      className="px-5 py-4 flex items-center gap-3 hover:bg-slate-50 dark:bg-slate-950 transition-colors cursor-pointer"
+                      className="px-6 py-5 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all cursor-pointer group"
                     >
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${item.riskLevel === 'Low' ? 'bg-emerald-500' : item.riskLevel === 'Medium' ? 'bg-amber-500' : 'bg-red-500'}`} />
+                      <div className={`w-3 h-3 rounded-full flex-shrink-0 shadow-sm ${item.riskLevel === 'Low' ? 'bg-emerald-500' : item.riskLevel === 'Medium' ? 'bg-amber-500' : 'bg-red-500'}`} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-300 truncate">{item.title}</p>
-                        <p className="text-xs text-slate-400">{item.type} · {new Date(item.time).toLocaleDateString()}</p>
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors uppercase tracking-tight">{item.title}</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">{item.type} · {new Date(item.time).toLocaleDateString()}</p>
                       </div>
-                      <span className={`badge text-[10px] ${item.riskLevel === 'Low' ? 'badge-green' : item.riskLevel === 'Medium' ? 'badge-yellow' : 'badge-red'}`}>
+                      <span className={`badge ${item.riskLevel === 'Low' ? 'badge-green' : item.riskLevel === 'Medium' ? 'badge-yellow' : 'badge-red'} scale-90`}>
                         {item.riskLevel} Risk
                       </span>
                     </div>
                   ))
                 ) : (
-                  <div className="px-5 py-10 text-center text-slate-400 text-sm">
-                    No recent activity yet.
+                  <div className="px-6 py-12 text-center">
+                    <p className="text-sm font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">No recent activity yet</p>
                   </div>
                 )}
               </div>
@@ -197,19 +197,19 @@ export default function Dashboard() {
                 <BookOpen size={16} className="text-slate-500 dark:text-slate-400" />
                 <h3 className="font-semibold text-slate-800 dark:text-slate-300">Legal Tips for You</h3>
               </div>
-              <div className="p-5 space-y-3">
+              <div className="p-6 space-y-4">
                 {[
-                  { icon: Shield, color: 'text-navy-600', bg: 'bg-navy-100', tip: 'Always keep copies of all legal documents and correspondences.', label: 'Document Safety' },
-                  { icon: Clock, color: 'text-amber-600', bg: 'bg-amber-100', tip: 'Limitation period for consumer complaints is typically 2 years from the date of cause.', label: 'Time Limits' },
-                  { icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-100', tip: 'A valid contract requires offer, acceptance, consideration, and mutual consent.', label: 'Contract Basics' },
+                  { icon: Shield, color: 'text-navy-600 dark:text-navy-400', bg: 'bg-navy-100 dark:bg-navy-900/30', tip: 'Always keep copies of all legal documents and correspondences.', label: 'Document Safety' },
+                  { icon: Clock, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-100 dark:bg-amber-900/30', tip: 'Limitation period for consumer complaints is typically 2 years from the date of cause.', label: 'Time Limits' },
+                  { icon: CheckCircle, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-900/30', tip: 'A valid contract requires offer, acceptance, consideration, and mutual consent.', label: 'Contract Basics' },
                 ].map(({ icon: Icon, color, bg, tip, label }, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950">
-                    <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                      <Icon size={14} className={color} />
+                  <div key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-950/50 border border-slate-100 dark:border-white/5 hover:border-navy-200 dark:hover:border-navy-900 transition-all group">
+                    <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center flex-shrink-0 mt-0.5 border dark:border-transparent group-hover:scale-110 transition-transform`}>
+                      <Icon size={16} className={color} />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wide mb-0.5">{label}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{tip}</p>
+                      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{label}</p>
+                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">{tip}</p>
                     </div>
                   </div>
                 ))}
@@ -224,52 +224,30 @@ export default function Dashboard() {
                 <MapPin size={16} className="text-navy-600" />
                 <h3 className="font-semibold text-slate-800 dark:text-slate-300">Nearby Legal Resources</h3>
               </div>
-              <button
-                onClick={() => setLocationOpen(true)}
-                className="text-xs text-navy-600 font-semibold hover:underline flex items-center gap-1"
-              >
-                <Navigation size={11} /> Find Near Me
-              </button>
+
             </div>
 
             {/* Quick links grid */}
-            <div className="p-5">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                {[
-                  { icon: Scale, label: 'Courts', desc: 'District & High Courts', color: 'text-navy-600', bg: 'bg-navy-100', count: '12 nearby' },
-                  { icon: Shield, label: 'Police Stations', desc: 'Cyber & general crime', color: 'text-red-600', bg: 'bg-red-100', count: '8 nearby' },
-                  { icon: Building2, label: 'Legal Aid', desc: 'Free legal assistance', color: 'text-emerald-600', bg: 'bg-emerald-100', count: '5 nearby' },
-                ].map(({ icon: Icon, label, desc, color, bg, count }) => (
-                  <button
-                    key={label}
-                    onClick={() => setLocationOpen(true)}
-                    className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 hover:bg-navy-50 border border-slate-200 dark:border-white/10 hover:border-navy-200 transition-all group text-left"
-                  >
-                    <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
-                      <Icon size={16} className={color} />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-300 group-hover:text-navy-800">{label}</p>
-                      <p className="text-xs text-slate-400 truncate">{desc}</p>
-                      <p className={`text-xs font-bold mt-0.5 ${color}`}>{count}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
+            <div className="p-6">
 
               {/* Location prompt banner */}
               <div
                 onClick={() => setLocationOpen(true)}
-                className="flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-navy-50 to-indigo-50 border border-navy-100 cursor-pointer hover:border-navy-300 transition-all group"
+                className="flex items-center gap-5 p-6 rounded-3xl bg-gradient-to-br from-navy-50 via-white to-indigo-50 dark:from-navy-950/40 dark:via-slate-900 dark:to-navy-950/20 border border-navy-100 dark:border-navy-900/30 cursor-pointer hover:border-navy-400 dark:hover:border-navy-700 transition-all group relative overflow-hidden shadow-sm"
               >
-                <div className="w-10 h-10 bg-navy-700 rounded-xl flex items-center justify-center flex-shrink-0 shadow-navy group-hover:scale-105 transition-transform">
-                  <Navigation size={18} className="text-white" />
+                <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Navigation size={120} className="-rotate-12" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-navy-800">Find courts, police stations & legal aid near you</p>
-                  <p className="text-xs text-navy-500 mt-0.5">Get directions, phone numbers, and opening hours instantly</p>
+                <div className="w-14 h-14 bg-navy-700 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-navy group-hover:scale-110 group-hover:rotate-3 transition-all relative z-10">
+                  <Navigation size={24} className="text-white" />
                 </div>
-                <ArrowRight size={16} className="text-navy-400 group-hover:text-navy-700 flex-shrink-0 transition-colors" />
+                <div className="flex-1 min-w-0 relative z-10">
+                  <p className="text-base font-bold text-navy-900 dark:text-navy-100 tracking-tight">Access Local Legal Network</p>
+                  <p className="text-xs font-medium text-navy-600/70 dark:text-navy-400/60 mt-1 leading-relaxed">Find courts, police stations & legal aid with instant directions and contact info</p>
+                </div>
+                <div className="w-10 h-10 rounded-full bg-navy-100 dark:bg-navy-900/50 flex items-center justify-center text-navy-600 dark:text-navy-400 group-hover:bg-navy-700 group-hover:text-white transition-all relative z-10">
+                  <ArrowRight size={20} />
+                </div>
               </div>
             </div>
           </div>

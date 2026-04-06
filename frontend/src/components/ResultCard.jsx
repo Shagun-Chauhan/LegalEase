@@ -4,91 +4,96 @@ import { AlertTriangle, CheckCircle, Info, Calendar, DollarSign, FileWarning } f
 const variants = {
   keypoint: {
     icon: Info,
-    iconBg: 'bg-navy-100',
-    iconColor: 'text-navy-600',
-    border: 'border-navy-100',
-    headerBg: 'bg-navy-50',
+    iconBg: 'bg-navy-50 dark:bg-navy-950/40',
+    iconColor: 'text-navy-600 dark:text-navy-400',
+    border: 'border-navy-100 dark:border-navy-900/30',
+    headerBg: 'bg-navy-50/50 dark:bg-navy-950/20',
     label: 'Key Point',
-    labelColor: 'text-navy-700',
+    labelColor: 'text-navy-700 dark:text-navy-300',
   },
   date: {
     icon: Calendar,
-    iconBg: 'bg-purple-100',
-    iconColor: 'text-purple-600',
-    border: 'border-purple-100',
-    headerBg: 'bg-purple-50',
+    iconBg: 'bg-purple-50 dark:bg-purple-950/40',
+    iconColor: 'text-purple-600 dark:text-purple-400',
+    border: 'border-purple-100 dark:border-purple-900/30',
+    headerBg: 'bg-purple-50/50 dark:bg-purple-950/20',
     label: 'Important Date',
-    labelColor: 'text-purple-700',
+    labelColor: 'text-purple-700 dark:text-purple-300',
   },
   amount: {
     icon: DollarSign,
-    iconBg: 'bg-emerald-100',
-    iconColor: 'text-emerald-600',
-    border: 'border-emerald-100',
-    headerBg: 'bg-emerald-50',
+    iconBg: 'bg-emerald-50 dark:bg-emerald-950/40',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    border: 'border-emerald-100 dark:border-emerald-900/30',
+    headerBg: 'bg-emerald-50/50 dark:bg-emerald-950/20',
     label: 'Amount',
-    labelColor: 'text-emerald-700',
+    labelColor: 'text-emerald-700 dark:text-emerald-300',
   },
   risk: {
     icon: AlertTriangle,
-    iconBg: 'bg-red-100',
-    iconColor: 'text-red-600',
-    border: 'border-red-100',
-    headerBg: 'bg-red-50',
+    iconBg: 'bg-red-50 dark:bg-red-950/40',
+    iconColor: 'text-red-600 dark:text-red-400',
+    border: 'border-red-100 dark:border-red-900/30',
+    headerBg: 'bg-red-50/50 dark:bg-red-950/20',
     label: 'Risky Clause',
-    labelColor: 'text-red-700',
+    labelColor: 'text-red-700 dark:text-red-300',
   },
   success: {
     icon: CheckCircle,
-    iconBg: 'bg-emerald-100',
-    iconColor: 'text-emerald-600',
-    border: 'border-emerald-100',
-    headerBg: 'bg-emerald-50',
+    iconBg: 'bg-emerald-50 dark:bg-emerald-950/40',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    border: 'border-emerald-100 dark:border-emerald-900/30',
+    headerBg: 'bg-emerald-50/50 dark:bg-emerald-950/20',
     label: 'Favorable Clause',
-    labelColor: 'text-emerald-700',
+    labelColor: 'text-emerald-700 dark:text-emerald-300',
   },
   warning: {
     icon: FileWarning,
-    iconBg: 'bg-amber-100',
-    iconColor: 'text-amber-600',
-    border: 'border-amber-100',
-    headerBg: 'bg-amber-50',
+    iconBg: 'bg-amber-50 dark:bg-amber-950/40',
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    border: 'border-amber-100 dark:border-amber-900/30',
+    headerBg: 'bg-amber-50/50 dark:bg-amber-950/20',
     label: 'Warning',
-    labelColor: 'text-amber-700',
+    labelColor: 'text-amber-700 dark:text-amber-300',
   },
 };
 
 export default function ResultCard({ variant = 'keypoint', title, content, meta, severity }) {
-  const v = variants[variant];
+  const v = variants[variant] || variants.keypoint;
   const Icon = v.icon;
 
   return (
-    <div className={`rounded-2xl border ${v.border} overflow-hidden shadow-sm`}>
+    <div className={`rounded-2xl border ${v.border} overflow-hidden shadow-sm card-base`}>
       {/* Header */}
-      <div className={`${v.headerBg} px-4 py-3 flex items-center gap-2.5`}>
-        <div className={`w-7 h-7 rounded-lg ${v.iconBg} flex items-center justify-center`}>
-          <Icon size={14} className={v.iconColor} />
+      <div className={`${v.headerBg} px-4 py-3 flex items-center gap-3 border-b ${v.border}`}>
+        <div className={`w-8 h-8 rounded-xl ${v.iconBg} flex items-center justify-center shadow-sm`}>
+          <Icon size={16} className={v.iconColor} />
         </div>
-        <span className={`text-xs font-bold uppercase tracking-wider ${v.labelColor}`}>{v.label}</span>
+        <span className={`text-[10px] font-bold uppercase tracking-widest ${v.labelColor}`}>{v.label}</span>
         {severity && (
-          <span className={`ml-auto text-xs font-semibold px-2 py-0.5 rounded-full ${
-            severity === 'High' ? 'bg-red-100 text-red-700' :
-            severity === 'Medium' ? 'bg-amber-100 text-amber-700' :
-            'bg-emerald-100 text-emerald-700'
-          }`}>{severity}</span>
+          <span className={`ml-auto badge ${
+            severity === 'High' ? 'badge-red' :
+            severity === 'Medium' ? 'badge-yellow' :
+            'badge-green'
+          }`}>{severity} Risk</span>
         )}
       </div>
 
       {/* Body */}
-      <div className="bg-white px-4 py-4">
-        <h4 className="font-semibold text-slate-800 text-sm mb-1.5">{title}</h4>
-        <p className="text-sm text-slate-600 leading-relaxed">{content}</p>
+      <div className="px-5 py-5 bg-white dark:bg-slate-900">
+        <h4 className="font-bold text-slate-900 dark:text-white text-[15px] mb-2 leading-tight">{title}</h4>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{content}</p>
+        
         {meta && (
-          <p className="text-xs text-slate-400 mt-2.5 flex items-center gap-1">
-            <span className="w-1 h-1 bg-slate-300 rounded-full" /> {meta}
-          </p>
+          <div className="mt-4 flex items-center gap-2 group">
+            <div className="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 group-hover:bg-navy-400 transition-colors" />
+            <p className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
+              {meta}
+            </p>
+          </div>
         )}
       </div>
     </div>
   );
 }
+

@@ -59,7 +59,7 @@ export default function UploadBox({ onFileSelect, accept=".pdf,.docx,.txt,text/p
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* Drop zone */}
       <div
         onDrop={handleDrop}
@@ -67,11 +67,11 @@ export default function UploadBox({ onFileSelect, accept=".pdf,.docx,.txt,text/p
         onDragLeave={handleDragLeave}
         onClick={() => inputRef.current.click()}
         className={`
-          relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer
-          transition-all duration-200
+          relative border-2 border-dashed rounded-3xl p-12 text-center cursor-pointer
+          transition-all duration-300 group
           ${dragActive
-            ? 'border-navy-500 bg-navy-50 scale-[1.01]'
-            : 'border-slate-300 bg-slate-50 hover:border-navy-400 hover:bg-navy-50/50'
+            ? 'border-navy-500 bg-navy-50/50 dark:bg-navy-950/20 scale-[1.01] shadow-xl shadow-navy-500'
+            : 'border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 hover:border-navy-400 hover:bg-navy-50/30 dark:hover:bg-navy-950/10 hover:shadow-lg hover:shadow-slate-200 dark:hover:shadow-none'
           }
         `}
       >
@@ -84,57 +84,74 @@ export default function UploadBox({ onFileSelect, accept=".pdf,.docx,.txt,text/p
           onChange={e => handleFiles(e.target.files)}
         />
 
-        <div className={`w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-colors
-          ${dragActive ? 'bg-navy-100' : 'bg-white shadow-card'}`}
+        <div className={`w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center transition-all duration-300
+          ${dragActive ? 'bg-navy-500 text-white shadow-navy scale-110' : 'bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:text-navy-500 group-hover:scale-105 group-hover:bg-navy-50 dark:group-hover:bg-navy-950/50'}`}
         >
-          <Upload size={28} className={dragActive ? 'text-navy-600' : 'text-slate-400'} />
+          <Upload size={32} strokeWidth={2.5} />
         </div>
 
-        <h3 className="font-semibold text-slate-700 mb-1">
-          {dragActive ? 'Drop files here' : 'Drag & drop files here'}
+        <h3 className="font-bold text-slate-900 dark:text-white text-lg mb-2">
+          {dragActive ? 'Release to upload' : 'Upload your documents'}
         </h3>
-        <p className="text-sm text-slate-400 mb-3">or <span className="text-navy-600 font-semibold underline">browse to choose</span></p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-xs mx-auto">
+          Drag and drop your files here or <span className="text-navy-600 dark:text-navy-400 font-bold hover:underline">browse files</span>
+        </p>
 
-        <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
-          <span className="flex items-center gap-1">
-            <File size={12} /> PDF, DOC, DOCX ,TXT
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {['PDF', 'DOCX', 'TXT'].map(type => (
+            <span key={type} className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border border-slate-200 dark:border-white/5">
+              {type}
+            </span>
+          ))}
+          <div className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700 mx-1" />
+          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            Max {maxSizeMB}MB
           </span>
-          <span>·</span>
-          <span>Max {maxSizeMB}MB per file</span>
         </div>
       </div>
 
       {/* Errors */}
-      {errors.map((err, i) => (
-        <div key={i} className="flex items-center gap-2.5 px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">
-          <AlertCircle size={15} className="flex-shrink-0" />
-          {err}
+      {errors.length > 0 && (
+        <div className="space-y-2">
+          {errors.map((err, i) => (
+            <div key={i} className="flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-2xl text-sm font-semibold text-red-600 dark:text-red-400 animate-slide-up">
+              <AlertCircle size={18} className="flex-shrink-0" />
+              {err}
+            </div>
+          ))}
         </div>
-      ))}
+      )}
 
       {/* File List */}
       {files.length > 0 && (
-        <div className="space-y-2">
-          {files.map((file, i) => (
-            <div key={i} className="flex items-center gap-3 px-4 py-3 bg-white border border-slate-200 rounded-xl">
-              <div className="w-9 h-9 bg-navy-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <File size={16} className="text-navy-600" />
+        <div className="space-y-3 pt-2">
+          <p className="section-label px-1">Selected Files ({files.length})</p>
+          <div className="grid grid-cols-1 gap-3">
+            {files.map((file, i) => (
+              <div key={i} className="group flex items-center gap-4 px-5 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl shadow-sm hover:shadow-md transition-all animate-fade-in">
+                <div className="w-10 h-10 bg-navy-50 dark:bg-navy-950/40 rounded-xl flex items-center justify-center flex-shrink-0 border border-navy-100 dark:border-navy-900/30 shadow-sm">
+                  <File size={18} className="text-navy-600 dark:text-navy-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{file.name}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-0.5">{formatSize(file.size)}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="badge badge-green">Ready</span>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); removeFile(i); }}
+                    className="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 text-slate-400 hover:text-red-500 transition-all active:scale-90"
+                    title="Remove file"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800 truncate">{file.name}</p>
-                <p className="text-xs text-slate-400">{formatSize(file.size)}</p>
-              </div>
-              <CheckCircle size={16} className="text-emerald-500 flex-shrink-0" />
-              <button
-                onClick={(e) => { e.stopPropagation(); removeFile(i); }}
-                className="p-1 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                <X size={14} />
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>
   );
 }
+
