@@ -57,6 +57,7 @@ function serializeDoc(doc) {
 
   return {
     id: d._id,
+    _id: d._id,
     originalFileName: d.originalFileName,
     uploadedAt: d.uploadedAt,
 
@@ -218,6 +219,9 @@ async function getDocument(req, res) {
 }
 async function deleteDocument(req, res) {
   const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid document id." });
+  }
 
   try {
     const doc = await Document.findOneAndDelete({
@@ -232,6 +236,7 @@ async function deleteDocument(req, res) {
     res.json({ success: true, message: "Deleted successfully" });
 
   } catch (err) {
+    console.error("DELETE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -244,7 +249,7 @@ async function getDashboardStats(req, res) {
 
     const totalDocuments = docs.length;
     const highRiskCount = docs.filter(d => d.riskLevel === "High").length;
-    
+
     let totalRiskScore = 0;
     docs.forEach(d => {
       totalRiskScore += (d.riskScore || 0);
