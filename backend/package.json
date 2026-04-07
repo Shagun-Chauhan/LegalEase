@@ -35,6 +35,7 @@
     "nodemailer": "^8.0.4",
     "pdf-parse": "^1.1.1",
     "pdfkit": "^0.18.0",
+    "puppeteer": "^24.40.0",
     "stream-to-buffer": "^0.1.0"
   }
 }

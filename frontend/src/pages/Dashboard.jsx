@@ -226,9 +226,6 @@ export default function Dashboard() {
                           {doc.docType.replace('_', ' ')} · {doc.language}
                         </p>
                       </div>
-                      <span className="badge badge-blue scale-90">
-                        Cloud
-                      </span>
                     </div>
                   ))
                 ) : (

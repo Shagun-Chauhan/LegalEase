@@ -60,7 +60,9 @@ export default function GeneratorOutput() {
 
       if (res.data.document?.cloudinaryUrl) {
         toast.success("Document finalized securely! Downloading PDF...", { id: toastId });
-        window.open(res.data.document.cloudinaryUrl, "_blank");
+        const url = res.data.document.cloudinaryUrl;
+
+        window.open(url, "_blank");
       }
     } catch (err) {
       toast.error("Finalization failed: " + (err.response?.data?.message || err.message), { id: toastId });
@@ -114,9 +116,6 @@ export default function GeneratorOutput() {
               </button>
               <button onClick={handleCopy} disabled={!draftLoaded} className={`p-3 rounded-xl border transition-all bg-white dark:bg-slate-900 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-navy-200 disabled:opacity-50 ${copied ? 'text-emerald-500 border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/20' : ''}`}>
                 {copied ? <Check size={18} strokeWidth={2.5} /> : <Copy size={18} strokeWidth={2.5} />}
-              </button>
-              <button disabled={!draftLoaded} className="p-3 rounded-xl border bg-white dark:bg-slate-900 border-slate-200 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-navy-200 transition-all disabled:opacity-50">
-                <Printer size={18} strokeWidth={2.5} />
               </button>
             </div>
           </div>
@@ -174,22 +173,7 @@ export default function GeneratorOutput() {
               {finalizing ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
               {finalizing ? "Translating & Encoding PDF..." : "Encode & Download PDF"}
             </button>
-            <button disabled className="flex items-center justify-center gap-2 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 border bg-white dark:bg-slate-900 border-slate-200 dark:border-white/5 text-slate-500 opacity-50 cursor-not-allowed">
-              <Share2 size={16} /> Share Secure Link via Email (Pro)
-            </button>
           </div>
-
-          {/* Regenerate */}
-          <div className="text-center mt-5">
-            <button
-              onClick={fetchDraft}
-              disabled={!draftLoaded || finalizing}
-              className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-navy-700 transition-colors disabled:opacity-50"
-            >
-              <RefreshCw size={13} /> Reset Document
-            </button>
-          </div>
-
         </div>
       </main>
     </div>
