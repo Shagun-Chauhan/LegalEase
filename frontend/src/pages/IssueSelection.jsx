@@ -6,6 +6,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import AIChat from '../components/AIChat';
 
 const categories = [
   {
@@ -106,7 +107,7 @@ export default function IssueSelection() {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
   const [user, setUser] = useState(null);
-
+  const [chatOpen, setChatOpen] = useState(false);
   useEffect(() => {
     authService.getProfile()
       .then(res => {
@@ -231,9 +232,14 @@ export default function IssueSelection() {
               <p className="text-[10px] font-bold text-navy-400 uppercase tracking-widest leading-relaxed">Describe your unique problem and our system will map out the correct legal pathway for you.</p>
             </div>
             
-            <button className="bg-white hover:bg-navy-50 text-navy-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl relative z-10 group flex items-center gap-2">
-              Start Session <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
-            </button>
+            <button
+            onClick={() => setChatOpen(true)}
+            className="bg-white hover:bg-navy-50 text-navy-900 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl relative z-10 group flex items-center gap-2"
+          >
+            Start Session
+            <ArrowRight size={14} strokeWidth={3} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+          {chatOpen && <AIChat onClose={() => setChatOpen(false)} />}
           </div>
 
         </div>

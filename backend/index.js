@@ -8,7 +8,6 @@ const path = require("path");
 
 dotenv.config();
 
-// Startup Purge: Clear any orphaned uploads
 const uploadsDir = path.join(__dirname, "uploads");
 if (fs.existsSync(uploadsDir)) {
     fs.readdirSync(uploadsDir).forEach(file => {
@@ -33,6 +32,7 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/location",require("./routes/locationRoutes"));
 app.use("/api/document", require("./routes/documentRoutes"));
 app.use("/api/generator", require("./routes/generatorRoutes"));
+app.use("/api/ai/chat", require("./routes/chatRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Backend is running...");

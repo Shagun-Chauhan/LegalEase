@@ -30,12 +30,12 @@
     "jsonwebtoken": "^9.0.3",
     "mammoth": "^1.9.0",
     "mongoose": "^8.23.0",
+    "morgan": "^1.10.1",
     "multer": "^2.1.1",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^8.0.4",
     "pdf-parse": "^1.1.1",
     "pdfkit": "^0.18.0",
-    "puppeteer": "^24.40.0",
     "stream-to-buffer": "^0.1.0"
   }
 }
