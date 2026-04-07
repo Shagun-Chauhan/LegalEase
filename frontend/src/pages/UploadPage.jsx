@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Shield, Zap, ChevronRight, ArrowRight, Info, Loader2, Search, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import UploadBox from '../components/UploadBox';
@@ -31,15 +32,35 @@ export default function UploadPage() {
       .catch(err => console.error(err));
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this document?")) return;
-
-    try {
-      await documentService.delete(id);
-      setHistory(prev => prev.filter(doc => doc._id !== id));
-    } catch (err) {
-      alert("Delete failed: " + (err.response?.data?.message || err.message));
-    }
+  const handleDelete = (id) => {
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <p className="font-semibold text-sm text-slate-800">Delete this document?</p>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => toast.dismiss(t.id)}
+            className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={async () => {
+              toast.dismiss(t.id);
+              try {
+                await documentService.delete(id);
+                setHistory(prev => prev.filter(doc => doc._id !== id));
+                toast.success("Document deleted");
+              } catch (err) {
+                toast.error("Delete failed: " + (err.response?.data?.message || err.message));
+              }
+            }}
+            className="px-3 py-1.5 bg-red-500 text-white rounded-lg text-xs font-bold hover:bg-red-600 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ), { duration: 5000 });
   };
 
   const filteredHistory = history.filter(doc =>
@@ -62,9 +83,10 @@ export default function UploadPage() {
       localStorage.setItem("analysisResult", JSON.stringify(data));
 
       navigate("/result");
+      toast.success("Analysis complete");
 
     } catch (err) {
-      alert("Upload failed: " + (err.response?.data?.message || err.message));
+      toast.error("Upload failed: " + (err.response?.data?.message || err.message));
     } finally {
       setAnalyzing(false);
     }
@@ -72,7 +94,7 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-      <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} user={user} />
+      <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} user={user} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
       <main className={`transition-all duration-500 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} pt-20`}>

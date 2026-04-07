@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import authService from "../services/authService";
+import toast from 'react-hot-toast';
 
 const Field = ({ label, error, children }) => (
   <div className="space-y-2">
@@ -74,7 +75,7 @@ export default function Login() {
           password,
         });
 
-        alert(res.data.message);
+        toast.success(res.data.message || "Registration successful!");
         navigate('/otp', { state: { email } });
 
       } else {
@@ -88,7 +89,7 @@ export default function Login() {
       }
 
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong");
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
 
     setLoading(false);

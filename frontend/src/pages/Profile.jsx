@@ -114,7 +114,7 @@ export default function Profile() {
                 <div className="flex gap-2">
                   <button
                     onClick={handleUpdate}
-                    className="flex items-center justify-center w-10 h-10 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500 active:scale-95"
+                    className="flex items-center justify-center w-10 h-10 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-all shadow-md shadow-emerald-500 active:scale-95"
                   >
                     <Save size={18} />
                   </button>
@@ -146,9 +146,9 @@ export default function Profile() {
                     </div>
                   )}
                 </div>
-                
+
                 {editing && (
-                   <p className="text-[10px] font-black uppercase text-center mt-3 text-navy-600 dark:text-navy-400 tracking-widest animate-pulse">Update Avatar</p>
+                  <p className="text-[10px] font-black uppercase text-center mt-3 text-navy-600 dark:text-navy-400 tracking-widest animate-pulse">Update Avatar</p>
                 )}
               </div>
 
@@ -156,16 +156,7 @@ export default function Profile() {
 
                 <div>
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2 block">Full Name</label>
-                  {editing ? (
-                    <input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="input-field py-2.5"
-                      placeholder="Your Name"
-                    />
-                  ) : (
-                    <p className="font-bold text-slate-900 dark:text-white text-lg tracking-tight">{user.name}</p>
-                  )}
+                  <p className="font-bold text-slate-900 dark:text-white text-lg tracking-tight">{user.name}</p>
                 </div>
 
                 <div>
@@ -194,22 +185,6 @@ export default function Profile() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="card-base p-5 flex flex-col items-center justify-center text-center group hover:border-navy-300 transition-all">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Documents</p>
-                <p className="text-3xl font-black text-slate-900 dark:text-white group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors">12</p>
-              </div>
-
-              <div className="card-base p-5 flex flex-col items-center justify-center text-center group hover:border-navy-300 transition-all">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Legal Queries</p>
-                <p className="text-3xl font-black text-slate-900 dark:text-white group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors">8</p>
-              </div>
-
-              <div className="card-base p-5 flex flex-col items-center justify-center text-center group hover:border-emerald-300 transition-all">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Account Security</p>
-                <p className="text-xl font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-tight">Strong</p>
-              </div>
-            </div>
 
             <div className="card-base p-8">
               <div className="flex items-center gap-3 mb-8">
@@ -250,7 +225,7 @@ export default function Profile() {
           <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-md animate-fade-in" onClick={() => setShowPwdModal(false)} />
           <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 relative isolate animate-slide-up border border-slate-200 dark:border-white/10 overflow-hidden">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-navy-500/5 dark:bg-navy-500/10 rounded-full" />
-            
+
             <div className="flex justify-between items-center mb-8 relative z-10">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight uppercase">Update Password</h3>
               <button
@@ -270,15 +245,15 @@ export default function Profile() {
                 <div key={field.id} className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 pl-1">{field.label}</label>
                   <div className="relative group">
-                    <input 
-                      type={showPasswords ? "text" : "password"} 
-                      value={field.value} 
-                      onChange={e => field.setter(e.target.value)} 
+                    <input
+                      type={showPasswords ? "text" : "password"}
+                      value={field.value}
+                      onChange={e => field.setter(e.target.value)}
                       className="input-field py-3 pr-12 text-sm"
                       placeholder="••••••••"
                     />
-                    <button 
-                      onClick={() => setShowPasswords(!showPasswords)} 
+                    <button
+                      onClick={() => setShowPasswords(!showPasswords)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-navy-600 dark:text-slate-600 dark:hover:text-navy-400 transition-colors"
                     >
                       {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}

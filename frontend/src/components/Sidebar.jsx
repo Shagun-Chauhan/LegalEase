@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, onClose }) {
               <h1 className="font-display font-black text-slate-900 dark:text-white text-xl tracking-tighter uppercase leading-none">LegalEase</h1>
               <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-navy-500 mt-1">Legal Assistant</p>
             </div>
-            <button onClick={onClose} className="ml-auto p-2 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-400">
+            <button onClick={onClose} className="ml-auto p-2 rounded-xl bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400 transition-colors">
               <X size={18} />
             </button>
           </div>
@@ -95,10 +95,6 @@ export default function Sidebar({ isOpen, onClose }) {
             <div className="mt-10 pt-6 border-t border-slate-100 dark:border-white/5">
               <div className="flex items-center justify-between">
                 <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">v2.4 Production</span>
-                <div className="flex items-center gap-1 group cursor-pointer">
-                  <span className="text-[9px] font-black text-navy-500 uppercase tracking-widest group-hover:text-navy-400 transition-colors">Terminal</span>
-                  <ChevronRight size={10} className="text-navy-500 group-hover:translate-x-1 transition-transform" />
-                </div>
               </div>
             </div>
           </div>

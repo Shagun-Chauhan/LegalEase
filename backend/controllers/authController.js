@@ -100,6 +100,13 @@ exports.verifyOtp = async (req, res) => {
       sameSite: "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
+    try {
+      await sendEmail(email, null, "SUCCESS");
+    } catch (err) {
+      console.log("Failed to send success email:", err.message);
+    }
+
     res.json({ user, message: "User verified successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });

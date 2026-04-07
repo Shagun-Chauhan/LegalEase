@@ -7,6 +7,7 @@ import Card from '../components/Card';
 import LocationPicker from '../components/LocationPicker';
 import authService from '../services/authService';
 import documentService from '../services/documentService';
+import generatorService from '../services/generatorService';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -20,18 +21,21 @@ export default function Dashboard() {
     avgRiskScore: 0,
     recentActivity: []
   });
+  const [generatedDocs, setGeneratedDocs] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, statsRes] = await Promise.all([
+        const [profileRes, statsRes, genRes] = await Promise.all([
           authService.getProfile(),
-          documentService.getStats()
+          documentService.getStats(),
+          generatorService.getMyDocuments().catch(() => ({ data: [] }))
         ]);
 
         setUser(profileRes.data);
         localStorage.setItem("user", JSON.stringify(profileRes.data));
         setStats(statsRes.data);
+        setGeneratedDocs(genRes.data);
       } catch (err) {
         console.error("Dashboard data fetch error:", err);
       } finally {
@@ -191,8 +195,52 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Legal Tips */}
+            {/* Generated Documents */}
             <div className="card-base">
+              <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FileText size={16} className="text-slate-500 dark:text-slate-400" />
+                  <h3 className="font-semibold text-slate-800 dark:text-slate-300">Generated Artifacts</h3>
+                </div>
+                <button
+                  onClick={() => navigate('/generate')}
+                  className="text-xs text-navy-600 font-semibold hover:underline"
+                >
+                  Create New
+                </button>
+              </div>
+              <div className="divide-y divide-slate-100 dark:divide-white/5">
+                {generatedDocs.length > 0 ? (
+                  generatedDocs.slice(0, 4).map((doc) => (
+                    <div
+                      key={doc._id}
+                      onClick={() => window.open(doc.cloudinaryUrl, "_blank")}
+                      className="px-6 py-5 flex items-center gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-all cursor-pointer group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/30 flex-shrink-0">
+                        <Sparkles size={16} strokeWidth={2.5} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors tracking-tight">{doc.title}</p>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mt-1">
+                          {doc.docType.replace('_', ' ')} · {doc.language}
+                        </p>
+                      </div>
+                      <span className="badge badge-blue scale-90">
+                        Cloud
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-6 py-12 text-center">
+                    <p className="text-sm font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest">No artifacts generated yet</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Legal Tips */}
+            <div className="card-base lg:col-span-2">
               <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center gap-2">
                 <BookOpen size={16} className="text-slate-500 dark:text-slate-400" />
                 <h3 className="font-semibold text-slate-800 dark:text-slate-300">Legal Tips for You</h3>

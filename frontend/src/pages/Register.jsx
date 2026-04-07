@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield, CheckCircle, AlertCircle, Loader2, User } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from "../services/authService";
+import toast from 'react-hot-toast';
 
 const Field = ({ label, error, children }) => (
   <div className="space-y-2">
@@ -44,7 +45,7 @@ export default function Register() {
 
   const validateSignup = () => {
     const e = {};
-    if (!fullName.trim() || fullName.trim().length < 2) e.fullName = 'Enter your full name';
+    if (!fullName.trim() || fullName.trim().length < 2 || !/^[a-zA-Z\s]+$/.test(fullName.trim())) e.fullName = 'Enter a valid name (letters only)';
     if (!validateEmail(email)) e.email = 'Enter a valid email address';
     if (!password || password.length < 8) e.password = 'Password must be at least 8 characters';
     if (password !== confirmPassword) e.confirmPassword = 'Passwords do not match';
@@ -64,11 +65,11 @@ export default function Register() {
         password,
       });
 
-      alert(res.data.message);
+      toast.success(res.data.message || "Registration successful!");
       navigate('/otp', { state: { email } });
 
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong");
+      toast.error(err.response?.data?.message || "Something went wrong");
     }
 
     setLoading(false);
@@ -115,7 +116,7 @@ export default function Register() {
                 <input
                   type="text"
                   value={fullName}
-                  onChange={e => { setFullName(e.target.value); setErrors(p => ({ ...p, fullName: '' })); }}
+                  onChange={e => { const val = e.target.value.replace(/[^a-zA-Z\s]/g, ''); setFullName(val); setErrors(p => ({ ...p, fullName: '' })); }}
                   onKeyDown={handleKeyDown}
                   placeholder="Arjun Kumar Sharma"
                   className={`input-field pl-12 py-3.5 text-sm font-medium ${errors.fullName ? 'border-red-300 focus:ring-red-400' : ''}`}

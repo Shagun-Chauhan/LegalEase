@@ -12,6 +12,7 @@ import Sidebar from '../components/Sidebar';
 
 export default function ResultPage() {
   const [data, setData] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("analysisResult");
@@ -29,9 +30,10 @@ export default function ResultPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-      <Navbar />
-      <Sidebar />
-      <main className="md:ml-64 pt-20 p-6 md:p-10 max-w-5xl mx-auto">
+      <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className={`transition-all duration-500 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} pt-20`}>
+        <div className="p-6 md:p-10 max-w-5xl mx-auto">
 
         {/* HEADER */}
         <div className="mb-10">
@@ -197,7 +199,10 @@ export default function ResultPage() {
           </p>
         </div>
 
+        </div>
       </main>
     </div>
   );
 }
+
+

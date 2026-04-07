@@ -7,7 +7,6 @@ import FeatureCard from '../components/FeatureCard';
 export default function LandingPage() {
   const navigate = useNavigate();
 
-  // Redirect if already logged in
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
@@ -101,31 +100,31 @@ export default function LandingPage() {
         {/* Background Gradients */}
         <div className="absolute top-0 right-0 w-[60%] h-[100%] bg-navy-500/5 dark:bg-navy-500/10 rounded-bl-full blur-[150px] -z-10 animate-pulse" />
         <div className="absolute bottom-0 left-0 w-[40%] h-[80%] bg-indigo-500/5 dark:bg-indigo-500/10 rounded-tr-full blur-[150px] -z-10 animate-pulse" style={{ animationDelay: '2s' }} />
-        
+
         <div className="max-w-7xl mx-auto px-6 md:px-10 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-50 dark:bg-navy-950/40 border border-navy-100 dark:border-navy-900/50 text-navy-700 dark:text-navy-400 mb-8 animate-slide-up">
             <span className="flex h-2 w-2 rounded-full bg-navy-600 animate-ping"></span>
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Next-Gen Legal Tech</span>
           </div>
-          
+
           <h1 className="font-display text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter uppercase animate-slide-up" style={{ animationDelay: '100ms' }}>
-            Simplify Legal <br className="hidden md:block" /> 
+            Simplify Legal <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-navy-800 to-indigo-600 dark:from-navy-400 dark:to-indigo-400">Problems with AI</span>
           </h1>
-          
+
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
-            The all-in-one legal companion. Analyze document risks, generate legal notices, 
+            The all-in-one legal companion. Analyze document risks, generate legal notices,
             and get expert guidance on issues—all powered by advanced AI.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-slide-up" style={{ animationDelay: '300ms' }}>
-            <button 
+            <button
               onClick={() => navigate('/register')}
               className="w-full sm:w-auto bg-navy-700 hover:bg-navy-800 text-white px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest shadow-2xl shadow-navy transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
             >
               Get Started Now <ArrowRight size={18} />
             </button>
-            <button 
+            <button
               onClick={() => navigate('/login')}
               className="w-full sm:w-auto bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-200 dark:border-white/10 px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-xl"
             >
@@ -171,9 +170,9 @@ export default function LandingPage() {
               <p className="text-slate-500 dark:text-slate-400 text-lg font-medium leading-relaxed max-w-md">
                 Legal problems shouldn't be endless headaches. We've simplified the entire process into three simple steps.
               </p>
-              
+
               <div className="mt-12 space-y-4">
-                 <button 
+                <button
                   onClick={() => navigate('/register')}
                   className="bg-navy-700 hover:bg-navy-800 text-white px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-navy transition-all"
                 >
@@ -208,14 +207,14 @@ export default function LandingPage() {
             <div>
               <h2 className="section-label mb-4 text-left font-black">Trusted by Thousands</h2>
               <h3 className="font-display text-4xl md:text-5xl font-black tracking-tight uppercase mb-8">What our users <br /> are saying</h3>
-              
+
               <div className="flex items-center gap-4 mb-8">
                 <div className="flex gap-1 text-amber-500">
                   {[...Array(5)].map((_, i) => <Star key={i} size={20} fill="currentColor" />)}
                 </div>
                 <span className="font-black text-sm uppercase tracking-widest">4.9/5 Rating</span>
               </div>
-              
+
               <div className="grid grid-cols-3 gap-8">
                 <div>
                   <p className="text-3xl font-black text-navy-700 dark:text-navy-400 mb-1 leading-none tracking-tighter">5k+</p>
@@ -267,7 +266,7 @@ export default function LandingPage() {
                 Making the law accessible, understandable, and affordable for everyone using the power of AI.
               </p>
             </div>
-            
+
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6">Platform</h4>
               <ul className="space-y-4">
@@ -276,7 +275,7 @@ export default function LandingPage() {
                 <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Nearby Case</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6">Legal</h4>
               <ul className="space-y-4">
@@ -285,7 +284,7 @@ export default function LandingPage() {
                 <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Vault Policy</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6">Company</h4>
               <ul className="space-y-4">
@@ -295,7 +294,7 @@ export default function LandingPage() {
               </ul>
             </div>
           </div>
-          
+
           <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-slate-100 dark:border-white/5 opacity-50">
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 md:mb-0">
               © 2026 LegalEase AI. All rights reserved.

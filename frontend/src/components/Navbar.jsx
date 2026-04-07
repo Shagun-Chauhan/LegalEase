@@ -34,7 +34,7 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
       setSearchResults([]);
       return;
     }
-    const filtered = searchCategories.filter(c => 
+    const filtered = searchCategories.filter(c =>
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.desc.toLowerCase().includes(search.toLowerCase())
     );
@@ -58,7 +58,7 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
             console.error("Error parsing user from localStorage", e);
           }
         }
-        
+
         // Final fallback: Try to fetch profile from API
         try {
           const res = await authService.getProfile();
@@ -90,8 +90,8 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
 
           {/* Left: Hamburger + Logo */}
           <div className="flex items-center gap-4">
-            <button 
-              onClick={onMenuToggle} 
+            <button
+              onClick={onMenuToggle}
               className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -103,7 +103,6 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
               <div className="hidden sm:block">
                 <div className="flex items-center gap-1.5">
                   <h1 className="font-display font-bold text-slate-900 dark:text-white text-xl tracking-tight leading-none group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors">LegalEase</h1>
-                  <span className="px-1.5 py-0.5 rounded-md bg-navy-100 dark:bg-navy-900/40 text-[8px] font-bold text-navy-600 dark:text-navy-400 tracking-widest uppercase">Beta</span>
                 </div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 mt-1">Legal Assistant</p>
               </div>
@@ -124,7 +123,7 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
                 onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
                 className="w-full pl-12 pr-6 py-3 text-xs font-bold uppercase tracking-widest rounded-2xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900/40 focus:bg-white dark:focus:bg-slate-900 focus:ring-0 focus:border-navy-500/20 transition-all duration-300 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm"
               />
-              
+
               {/* Search Results Dropdown */}
               {searchFocused && search && (
                 <div className="absolute top-full left-0 right-0 mt-3 p-2 bg-white dark:bg-slate-950 rounded-[1.5rem] border border-slate-200 dark:border-white/10 shadow-2xl z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
@@ -209,28 +208,21 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
                       }}
                       className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-navy-600 transition-all group/item"
                     >
-                      <User size={14} className="text-slate-400 group-hover/item:scale-110 transition-transform" /> 
+                      <User size={14} className="text-slate-400 group-hover/item:scale-110 transition-transform" />
                       Profile Settings
                     </button>
-                    <button
-                      onClick={() => setDropdownOpen(false)}
-                      className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 hover:text-navy-600 transition-all group/item"
-                    >
-                      <Settings size={14} className="text-slate-400 group-hover/item:scale-110 transition-transform" /> 
-                      Settings
-                    </button>
-                    
+
                     <div className="h-px bg-slate-100 dark:bg-white/5 my-2 mx-2" />
-                    
-                    <button 
+
+                    <button
                       onClick={async () => {
                         await authService.logout();
                         localStorage.removeItem("user");
                         navigate('/login');
-                      }} 
+                      }}
                       className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all group/item"
                     >
-                      <LogOut size={14} className="group-hover/item:-translate-x-1 transition-transform" /> 
+                      <LogOut size={14} className="group-hover/item:-translate-x-1 transition-transform" />
                       Logout
                     </button>
                   </div>

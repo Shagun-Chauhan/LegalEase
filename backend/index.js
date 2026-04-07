@@ -32,7 +32,7 @@ app.use(express.json());
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/location",require("./routes/locationRoutes"));
 app.use("/api/document", require("./routes/documentRoutes"));
-
+app.use("/api/generator", require("./routes/generatorRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Backend is running...");

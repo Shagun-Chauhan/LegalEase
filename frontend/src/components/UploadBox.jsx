@@ -11,6 +11,13 @@ export default function UploadBox({ onFileSelect, accept=".pdf,.docx,.txt,text/p
     if (file.size > maxSizeMB * 1024 * 1024) {
       return `${file.name} exceeds ${maxSizeMB}MB limit`;
     }
+    const isValidType = accept.split(',').some(type => {
+      if (type.startsWith('.')) return file.name.toLowerCase().endsWith(type.toLowerCase());
+      return file.type === type;
+    });
+    if (!isValidType) {
+      return `${file.name} has invalid file type. Only ${accept} allowed`;
+    }
     return null;
   };
 
