@@ -3,11 +3,16 @@ const nodemailer = require("nodemailer");
 const sendEmail = async (to, otp, emailType = "OTP") => {
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // Use SSL/TLS
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s/g, "") : "",
       },
+      connectionTimeout: 10000, // 10 seconds timeout
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
 
     let subject, text;
@@ -20,19 +25,19 @@ const sendEmail = async (to, otp, emailType = "OTP") => {
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"LegalEase Vault" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,
     };
 
+    console.log(`Attempting to send ${emailType} email to: ${to}...`);
     await transporter.sendMail(mailOptions);
-
-    console.log("Email sent successfully");
+    console.log("✅ Email sent successfully");
 
   } catch (error) {
-    console.log("Email Error:", error.message);
-    throw error;
+    console.error("❌ Email Error:", error.message);
+    throw new Error(`Email delivery failed: ${error.message}`);
   }
 };
 
