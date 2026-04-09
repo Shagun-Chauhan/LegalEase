@@ -90,6 +90,123 @@ const issueData = {
       { label: 'Housing Portal', value: 'mohua.gov.in', icon: Globe },
     ],
   },
+  consumer: {
+    title: 'Consumer Rights & Disputes',
+    subtitle: 'Product defects, service failure, refund issues',
+    severity: 'Medium',
+    steps: [
+      { title: 'Preserve Proof of Purchase', description: 'Collect invoices, warranty cards, delivery receipts, and photos/videos of the defect.', duration: '1 day' },
+      { title: 'Send Formal Notice to Company', description: 'Send a notice via email and registered post demanding replacement or refund within 15 days.', duration: '1 day' },
+      { title: 'Register Complaint on NCH', description: 'Call 1915 or use the National Consumer Helpline portal to seek early mediation.', duration: '1 day' },
+      { title: 'File Case on E-Daakhil', description: 'If unresolved, file an official case in the District/State Consumer Forum through e-daakhil.nic.in.', duration: '1-2 weeks' },
+    ],
+    documents: [
+      { label: 'Invoice / Purchase Bill', description: 'Proof of purchase from the seller', required: true },
+      { label: 'Warranty / Guarantee Card', description: 'Relevant if product is under warranty coverage', required: true },
+      { label: 'Service Job Card', description: 'History of previous repair attempts', required: false },
+    ],
+    whatNext: [
+      { icon: CheckCircle, label: 'Best Outcome', text: 'Full refund/replacement + compensation for mental agony and litigation costs.' },
+      { icon: Clock, label: 'Timeline', text: 'Consumer Forum typically resolves cases in 3-12 months.' },
+    ],
+    contacts: [
+      { label: 'Consumer Helpline', value: '1915', icon: Phone },
+      { label: 'E-Daakhil Portal', value: 'edaakhil.nic.in', icon: Globe },
+    ],
+  },
+  property: {
+    title: 'Property & Real Estate Dispute',
+    subtitle: 'Ownership conflicts, encroachment, builder fraud',
+    severity: 'High',
+    steps: [
+      { title: 'Verify Title Documents', description: 'Examine Sale Deed, Mutation records, and Encumbrance Certificate from Sub-Registrar office.', duration: '2-4 days' },
+      { title: 'Send Legal Notice to Builder/Opposite Party', description: 'Through a lawyer, send a formal notice for possession, refund, or clearance of encroachment.', duration: '2-3 days' },
+      { title: 'File RERA Complaint', description: 'If against a builder, file a complaint in the State Real Estate Regulatory Authority (RERA).', duration: '1-2 weeks' },
+      { title: 'File Civil Suit / Police Complaint', description: 'For encroachment or document forgery, file a suit in civil court or an FIR for land grabbing.', duration: '2-4 weeks' },
+    ],
+    documents: [
+      { label: 'Sale Deed / Agreement to Sell', description: 'Primary ownership document', required: true },
+      { label: 'Possession Letter / Allotment', description: 'If claiming property from builder', required: true },
+      { label: '7/12 Extract / Khata Certificate', description: 'Revenue records of the property', required: true },
+    ],
+    whatNext: [
+      { icon: CheckCircle, label: 'Best Outcome', text: 'Clear possession, title rectification, or recovery of property value + damages.' },
+      { icon: Clock, label: 'Timeline', text: 'Property suits are lengthy, often taking 2-5 years in civil court.' },
+    ],
+    contacts: [
+      { label: 'RERA Portal', value: 'State Specific', icon: Globe },
+      { label: 'Revenue Dept', value: 'District Office', icon: Phone },
+    ],
+  },
+  vehicle: {
+    title: 'Motor Vehicle & Accident Claims',
+    subtitle: 'Accident claims, insurance disputes, challans',
+    severity: 'High',
+    steps: [
+      { title: 'Ensure FIR and Spot Panchnama', description: 'Immediately call police at the accident spot and obtain a copy of the FIR and Panchnama.', duration: 'Same day' },
+      { title: 'Notify Insurance Company', description: 'Inform your insurer within 24-48 hours to initiate the accident claim process.', duration: '1 day' },
+      { title: 'File Claim in MACT', description: 'File a petition in the Motor Accident Claims Tribunal for compensation for injury or death.', duration: '2-4 weeks' },
+    ],
+    documents: [
+      { label: 'FIR / MLC Report', description: 'Police and Medical Legal Certificate copies', required: true },
+      { label: 'Insurance Policy', description: 'Copy of valid insurance for the vehicle', required: true },
+      { label: 'Driving License / RC', description: 'Validity proof of the vehicle and driver', required: true },
+    ],
+    whatNext: [
+      { icon: CheckCircle, label: 'Best Outcome', text: 'Fair compensation for medical bills, loss of income, and vehicle repair.' },
+      { icon: Clock, label: 'Timeline', text: 'MACT proceedings usually take 12-24 months.' },
+    ],
+    contacts: [
+      { label: 'Police Helpline', value: '112', icon: Phone },
+      { label: 'Parivahan Portal', value: 'parivahan.gov.in', icon: Globe },
+    ],
+  },
+  family: {
+    title: 'Family & Marriage Law',
+    subtitle: 'Divorce, custody, maintenance, domestic violence',
+    severity: 'High',
+    steps: [
+      { title: 'Attempt Mediation', description: 'Try resolution through counseling or neutral mediators before starting litigation.', duration: '1-2 weeks' },
+      { title: 'Draft and File Petition', description: 'Prepare legal petition for divorce, maintenance (Section 125 CrPC), or custody through a lawyer.', duration: '1-2 weeks' },
+      { title: 'Interim Orders', description: 'Apply for urgent relief such as interim maintenance or a stay on domestic violence.', duration: '2-4 weeks' },
+    ],
+    documents: [
+      { label: 'Marriage Certificate / Photos', description: 'Proof of legal or factual marriage', required: true },
+      { label: 'Income Proof', description: 'Important for maintenance and alimony claims', required: true },
+      { label: 'Children Birth Certificates', description: 'Relevant for custody and support', required: false },
+    ],
+    whatNext: [
+      { icon: CheckCircle, label: 'Best Outcome', text: 'A fair settlement/decree ensuring safety, custody, and financial security.' },
+      { icon: Clock, label: 'Timeline', text: 'Family cases take 6-24 months depending on whether contested.' },
+    ],
+    contacts: [
+      { label: 'Women Helpline', value: '1091', icon: Phone },
+      { label: 'Family Court', value: 'District Court', icon: Globe },
+    ],
+  },
+  cyber: {
+    title: 'Cybercrime & Identity Theft',
+    subtitle: 'Hacking, identity theft, financial cyber fraud',
+    severity: 'High',
+    steps: [
+      { title: 'Secure Digital Accounts', description: 'Immediately change passwords, enable 2FA, and logout from all active sessions.', duration: 'Same day' },
+      { title: 'Preserve Evidence', description: 'Take screenshots of URLs, profiles, and messages. Save search/browser history.', duration: 'Same day' },
+      { title: 'Report on Cybercrime Portal', description: 'File a complaint on cybercrime.gov.in or report to the nearest Cyber Cell.', duration: '1 day' },
+    ],
+    documents: [
+      { label: 'Digital Evidence Screenshots', description: 'Visible proof of the incident or account takeover', required: true },
+      { label: 'Bank Statement / Transaction Log', description: 'If money was stolen or used fraudulently', required: true },
+      { label: 'Identity Proof', description: 'Required to reclaim accounts or verify yourself', required: true },
+    ],
+    whatNext: [
+      { icon: CheckCircle, label: 'Best Outcome', text: 'Recovery of stolen funds, account restoration, and investigation of perpetrator.' },
+      { icon: Clock, label: 'Timeline', text: 'Investigation varies; typically 30-180 days.' },
+    ],
+    contacts: [
+      { label: 'National Cyber Helpline', value: '1930', icon: Phone },
+      { label: 'Cyber Portal', value: 'cybercrime.gov.in', icon: Globe },
+    ],
+  },
 };
 
 const defaultIssue = issueData.fraud;
@@ -114,7 +231,7 @@ export default function ActionPage() {
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <main className={`transition-all duration-500 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} pt-20`}>
+      <main className={`transition-all duration-500 ${sidebarOpen ? 'md:ml-64' : 'ml-0'} pt-20 animate-fade-in`}>
         <div className="p-6 md:p-10 max-w-6xl mx-auto">
 
           {/* Breadcrumb */}
