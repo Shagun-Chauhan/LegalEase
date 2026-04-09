@@ -12,7 +12,7 @@
   }
 
   body {
-    @apply font-sans text-slate-800 bg-slate-50 dark:bg-slate-950 dark:text-slate-300 antialiased transition-colors duration-200;
+    @apply font-sans text-slate-800 bg-[#F8FAFC] dark:bg-slate-950 dark:text-slate-300 antialiased transition-all duration-500 ease-in-out;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -21,7 +21,7 @@
 @layer components {
   .btn-primary {
     @apply bg-navy-700 text-white font-semibold px-6 py-3 rounded-xl hover:bg-navy-800 
-           transition-all duration-200 shadow-navy hover:shadow-lg hover:-translate-y-0.5
+           transition-all duration-500 ease-in-out shadow-navy hover:shadow-lg hover:-translate-y-0.5
            active:translate-y-0 active:shadow-md disabled:opacity-50 disabled:cursor-not-allowed
            dark:shadow-none dark:hover:shadow-navy;
   }
@@ -30,30 +30,30 @@
     @apply bg-white text-navy-700 font-semibold px-6 py-3 rounded-xl border border-slate-200
            hover:border-navy-300 hover:bg-navy-50 
            dark:bg-slate-900 dark:border-white/10 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white
-           transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0;
+           transition-all duration-500 ease-in-out hover:-translate-y-0.5 active:translate-y-0;
   }
 
   .btn-ghost {
     @apply text-slate-600 font-medium px-4 py-2 rounded-xl hover:bg-slate-100 
            dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white
-           transition-all duration-200;
+           transition-all duration-500 ease-in-out;
   }
 
   .input-field {
     @apply w-full px-4 py-3 rounded-xl border border-slate-200 bg-white
            dark:bg-slate-900 dark:border-white/10 dark:text-slate-200 dark:placeholder-slate-500
-           focus:outline-none focus:ring-2 focus:ring-navy-500/20 dark:focus:ring-navy-500/30 focus:border-navy-500
-           transition-all duration-200 text-slate-800 placeholder-slate-400
+           focus:outline-none focus:ring-4 focus:ring-navy-500/10 dark:focus:ring-navy-500/20 focus:border-navy-500
+           transition-all duration-500 ease-in-out text-slate-800 placeholder-slate-400
            caret-slate-900 dark:caret-white font-sans text-sm;
   }
 
   .card-base {
-    @apply bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-white/10
-           transition-all duration-200;
+    @apply bg-white dark:bg-slate-900 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-slate-200/60 dark:border-white/10
+           transition-all duration-500 ease-in-out;
   }
 
   .card-hover {
-    @apply hover:shadow-md dark:hover:bg-slate-800 hover:-translate-y-0.5 cursor-pointer;
+    @apply hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] dark:hover:shadow-navy dark:hover:bg-slate-800 hover:-translate-y-1 cursor-pointer;
   }
 
   .section-label {
@@ -66,11 +66,11 @@
 
   .sidebar-link {
     @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium
-           transition-all duration-200 cursor-pointer;
+           transition-all duration-500 ease-in-out cursor-pointer;
   }
 
   .sidebar-link-active {
-    @apply bg-navy-700 text-white shadow-md dark:shadow-navy;
+    @apply bg-navy-700 text-white shadow-lg shadow-navy;
   }
 
   .sidebar-link-inactive {
@@ -79,7 +79,7 @@
   }
 
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-500;
   }
 
   .badge-blue {
@@ -97,6 +97,25 @@
   .badge-yellow {
     @apply bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50;
   }
+}
+
+/* Page Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Spinner animation */
@@ -133,11 +152,11 @@
 .otp-input {
   @apply w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-slate-200
          focus:outline-none focus:border-navy-500 focus:ring-4 focus:ring-navy-500/10
-         transition-all duration-200 bg-white text-slate-900
+         transition-all duration-300 bg-white text-slate-900
          dark:bg-slate-900 dark:border-white/10 dark:text-white;
 }
 
 /* Timeline */
 .timeline-connector {
   @apply absolute left-4 top-8 bottom-0 w-0.5 bg-slate-100 dark:bg-white/5;
-}
+}

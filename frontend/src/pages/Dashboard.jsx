@@ -86,7 +86,7 @@ export default function Dashboard() {
               </p>
               <button
                 onClick={() => navigate('/upload')}
-                className="mt-4 inline-flex items-center gap-2 bg-white dark:bg-slate-900/50 backdrop-blur-md text-navy-800 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-navy-50 transition-colors"
+                className="mt-4 inline-flex items-center gap-2 bg-white dark:bg-slate-900 dark:text-white backdrop-blur-sm text-navy-800 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-navy-50 transition-colors"
               >
                 Upload New Document <ArrowRight size={14} />
               </button>
