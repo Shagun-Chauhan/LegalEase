@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 import MapView from './MapView';
+import API from '../api';
 const popularCities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Kolkata', 'Ahmedabad'];
 
 const typeConfig = {
@@ -39,15 +40,11 @@ export default function LocationPicker({ onClose, onCitySelect }) {
       setLoading(true);
       setError('');
       setPlaceSearchQuery('');
-      const res = await fetch(
-        `http://localhost:5000/api/location/nearby?lat=${lat}&lng=${lng}&type=${type}`
+      const res = await API.get(
+        `/location/nearby?lat=${lat}&lng=${lng}&type=${type}`
       );
       
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Search service is temporarily busy");
-      }
+      const data = res.data;
 
       if (data.places) {
         setPlaces(data.places);
@@ -58,7 +55,7 @@ export default function LocationPicker({ onClose, onCitySelect }) {
       }
     } catch (err) {
       console.error("Error fetching places:", err);
-      setError(err.message || "Failed to connect to location service");
+      setError(err.response?.data?.error || "Search service is temporarily busy");
     } finally {
       setLoading(false);
     }
