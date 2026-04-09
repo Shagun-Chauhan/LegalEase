@@ -120,19 +120,19 @@ export default function GeneratorForm() {
               <div className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center border border-amber-200/50 dark:border-amber-800/30">
                 <Sparkles size={18} className="text-amber-500" />
               </div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">Document Assistant</p>
+              <p className="text-[15px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">Document Assistant</p>
             </div>
-            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight uppercase mb-2">Create Legal Documents</h1>
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
+            <h1 className="font-display text-3xl font-bold text-slate-900 dark:text-white tracking-tight uppercase mb-2">Create Legal Documents</h1>
+            <p className="text-md font-medium text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
               Construct high-fidelity legal documents instantly. Our AI models analyze jurisdictional requirements to ensure structural integrity.
             </p>
           </div>
 
           {/* ── Document Type ── */}
           <div className="card-base p-5 mb-5">
-            <h2 className="font-semibold text-slate-800 text-sm mb-3 flex items-center gap-2">
+            <h1 className="font-semibold text-slate-800 text-sm mb-3 flex items-center gap-2">
               <FileText size={15} className="text-navy-600" /> Select Document Type
-            </h2>
+            </h1>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {docTypes.map(dt => (
                 <button
@@ -145,7 +145,7 @@ export default function GeneratorForm() {
                     }`}
                 >
                   <span className="text-base">{dt.icon}</span>
-                  <span className="text-xs leading-tight">{dt.label}</span>
+                  <span className="text-md leading-tight">{dt.label}</span>
                 </button>
               ))}
             </div>
@@ -182,7 +182,7 @@ export default function GeneratorForm() {
             {selectedLang !== 'english' && (
               <div className="mt-6 flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 rounded-2xl">
                 <Info size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                <p className="text-[10px] font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wide leading-relaxed">
+                <p className="text-[15px] font-bold text-amber-700 dark:text-amber-500 uppercase tracking-wide leading-relaxed">
                   {selectedLang === 'hindi'
                     ? 'दस्तावेज़ हिन्दी में तैयार किया जाएगा। कानूनी शब्दावली मानक हिन्दी में होगी।'
                     : 'दस्तावेज मराठीत तयार केला जाईल. कायदेशीर शब्दावली मानक मराठीत असेल.'}
@@ -197,7 +197,7 @@ export default function GeneratorForm() {
 
             {/* Your Details */}
             <div className="relative z-10">
-              <h2 className="font-display text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-8 flex items-center gap-3">
+              <h2 className="font-display text-md font-black text-slate-900 dark:text-white uppercase tracking-widest mb-8 flex items-center gap-3">
                  <div className="w-8 h-8 rounded-lg bg-navy-50 dark:bg-navy-950 flex items-center justify-center border border-navy-100 dark:border-navy-900">
                   <User size={16} className="text-navy-600 dark:text-navy-400" />
                  </div>
@@ -253,7 +253,7 @@ export default function GeneratorForm() {
 
             {/* Opposing Party */}
             <div className="border-t border-slate-100 dark:border-white/5 pt-10 relative z-10">
-              <h2 className="font-display text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-8 flex items-center gap-3">
+              <h2 className="font-display text-md font-black text-slate-900 dark:text-white uppercase tracking-widest mb-8 flex items-center gap-3">
                  <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950 flex items-center justify-center border border-red-100 dark:border-red-900">
                   <Building size={16} className="text-red-600 dark:text-red-400" />
                  </div>
@@ -306,7 +306,7 @@ export default function GeneratorForm() {
 
             {/* Tactical Brief */}
             <div className="border-t border-slate-100 dark:border-white/5 pt-10 relative z-10">
-              <h2 className="font-display text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest mb-8 flex items-center gap-3">
+              <h2 className="font-display text-md font-black text-slate-900 dark:text-white uppercase tracking-widest mb-8 flex items-center gap-3">
                  <div className="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950 flex items-center justify-center border border-purple-100 dark:border-purple-900">
                   <AlignLeft size={16} className="text-purple-600 dark:purple-400" />
                  </div>

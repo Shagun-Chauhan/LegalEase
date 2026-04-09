@@ -3,7 +3,7 @@ import React from 'react';
 const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => {
   return (
     <div 
-      className="card-base p-8 group hover:scale-[1.03] transition-all duration-300 border-slate-100 dark:border-white/5 relative overflow-hidden"
+      className="card-base p-8 group hover:scale-[1.03] transition-all duration-300 border-slate-300 dark:border-white/5 relative overflow-hidden"
       style={{ animationDelay: `${delay}ms` }}
     >
       {/* Decorative background element */}
@@ -22,11 +22,7 @@ const FeatureCard = ({ icon: Icon, title, description, delay = 0 }) => {
       <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed font-medium">
         {description}
       </p>
-      
-      <div className="mt-6 flex items-center gap-2 text-navy-600 dark:text-navy-400 text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all duration-300">
-        Learn More 
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </div>
+
     </div>
   );
 };

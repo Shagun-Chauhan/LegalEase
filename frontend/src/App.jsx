@@ -15,7 +15,6 @@ import GeneratorForm from './pages/GeneratorForm';
 import GeneratorOutput from './pages/GeneratorOutput';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
-
 export default function App() {
   return (
     <ThemeProvider>

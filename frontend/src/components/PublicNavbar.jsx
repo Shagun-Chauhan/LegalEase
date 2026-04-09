@@ -29,33 +29,33 @@ export default function PublicNavbar() {
             <Scale size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="font-display font-bold text-slate-900 dark:text-white text-xl tracking-tight leading-none">LegalEase</h1>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-1">Smart Legal Tech</p>
+            <h1 className="font-display font-bold text-slate-900 dark:text-white text-2xl tracking-tight leading-none">LegalEase</h1>
+            <p className="text-[13px] font-bold uppercase tracking-widest text-slate-700 dark:text-slate-500 mt-1">Smart Legal Tech</p>
           </div>
         </div>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors">Features</a>
-          <a href="#how-it-works" className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors">How it works</a>
+          <a href="#features" className="text-md font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors">Features</a>
+          <a href="#how-it-works" className="text-md font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors">How it works</a>
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all active:scale-95"
+            className="p-2 rounded-xl text-slate-700 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all active:scale-95"
           >
-            {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+            {theme === 'dark' ? <Sun size={20} className="text-amber-400" /> : <Moon size={20} />}
           </button>
           
           <div className="h-6 w-px bg-slate-200 dark:bg-white/10 mx-2" />
           
           <button 
             onClick={() => navigate('/login')}
-            className="text-xs font-black uppercase tracking-widest text-navy-700 dark:text-navy-400 hover:underline underline-offset-8 decoration-navy-500/30"
+            className="text-md font-black uppercase tracking-widest text-navy-700 dark:text-navy-400 hover:underline underline-offset-8 decoration-navy-500/30"
           >
             Login
           </button>
           <button 
             onClick={() => navigate('/register')}
-            className="bg-navy-700 hover:bg-navy-800 text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest shadow-xl shadow-navy transition-all active:scale-95"
+            className="bg-navy-700 hover:bg-navy-800 text-white px-6 py-3 rounded-xl text-md font-black uppercase tracking-widest shadow-xl shadow-navy transition-all active:scale-95"
           >
             Sign Up
           </button>

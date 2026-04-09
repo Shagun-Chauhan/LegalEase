@@ -104,7 +104,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 md:px-10 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-navy-50 dark:bg-navy-950/40 border border-navy-100 dark:border-navy-900/50 text-navy-700 dark:text-navy-400 mb-8 animate-slide-up">
             <span className="flex h-2 w-2 rounded-full bg-navy-600 animate-ping"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Next-Gen Legal Tech</span>
+            <span className="text-[12px] font-black uppercase tracking-[0.2em]">Next-Gen Legal Tech</span>
           </div>
 
           <h1 className="font-display text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter uppercase animate-slide-up" style={{ animationDelay: '100ms' }}>
@@ -136,8 +136,8 @@ export default function LandingPage() {
           <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
             {[Award, Users, Globe, Shield].map((Icon, i) => (
               <div key={i} className="flex flex-col items-center gap-2">
-                <Icon size={24} />
-                <span className="text-[10px] font-black uppercase tracking-widest leading-none">Trusted Partner</span>
+                <Icon size={30} />
+                <span className="text-[15px] font-black uppercase tracking-widest leading-none">Trusted Partner</span>
               </div>
             ))}
           </div>
@@ -148,7 +148,7 @@ export default function LandingPage() {
       <section id="features" className="py-32 px-6 md:px-10 bg-white dark:bg-slate-900/40 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="section-label mb-4">Powerful Features</h2>
+            <h1 className="section-label mb-4">Powerful Features</h1>
             <h3 className="font-display text-4xl md:text-5xl font-black tracking-tight uppercase">Everything you need <br /> to handle Legal matters</h3>
           </div>
 
@@ -174,7 +174,7 @@ export default function LandingPage() {
               <div className="mt-12 space-y-4">
                 <button
                   onClick={() => navigate('/register')}
-                  className="bg-navy-700 hover:bg-navy-800 text-white px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-navy transition-all"
+                  className="bg-navy-700 hover:bg-navy-800 text-white px-8 py-4 rounded-xl text-[13px] font-black uppercase tracking-widest shadow-xl shadow-navy transition-all"
                 >
                   Start Your Analysis
                 </button>
@@ -233,7 +233,7 @@ export default function LandingPage() {
 
             <div className="space-y-6">
               {testimonials.map((t, i) => (
-                <div key={i} className="card-base p-8 border-slate-100 dark:border-white/5 hover:scale-[1.02] transition-transform">
+                <div key={i} className="card-base p-8 border-slate-300 dark:border-white/5 hover:scale-[1.02] transition-transform">
                   <p className="text-lg font-medium text-slate-600 dark:text-slate-300 italic mb-6 leading-relaxed">"{t.text}"</p>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-navy-700 to-indigo-700 flex items-center justify-center text-white font-black text-xl shadow-lg border border-navy-600">

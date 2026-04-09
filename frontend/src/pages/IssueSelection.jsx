@@ -150,8 +150,8 @@ export default function IssueSelection() {
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-navy-600 dark:text-navy-400">Legal Help</p>
             </div>
-            <h1 className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight uppercase mb-2">What is your concern?</h1>
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
+            <h1 className="font-display text-3xl font-bold text-slate-900 dark:text-white tracking-tight uppercase mb-2">What is your concern?</h1>
+            <p className="text-md font-medium text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
               Select the category that best describes your situation. We'll provide specific legal frameworks, documentation checklists, and procedural guidance tailored to your needs.
             </p>
           </div>
@@ -201,10 +201,10 @@ export default function IssueSelection() {
                       </span>
                     </div>
 
-                    <h3 className="font-display text-lg font-black text-slate-900 dark:text-white tracking-tight group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors mb-2">
+                    <h2 className="font-display text-lg font-black text-slate-900 dark:text-white tracking-tight group-hover:text-navy-700 dark:group-hover:text-navy-400 transition-colors mb-2">
                       {cat.title}
-                    </h3>
-                    <p className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-grow">{cat.description}</p>
+                    </h2>
+                    <p className="text-md font-medium text-slate-500 dark:text-slate-400 leading-relaxed mb-6 flex-grow">{cat.description}</p>
                     
                     <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/5 relative z-10">
                       <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">{cat.count}</span>

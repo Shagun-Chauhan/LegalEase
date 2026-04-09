@@ -62,7 +62,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen bg-slate-200 dark:bg-slate-950">
       <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} user={user} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -103,7 +103,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <p className="font-display text-2xl font-bold text-slate-900 dark:text-white tracking-tight">{value}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mt-1">{label}</p>
+                <p className="text-[15px] font-bold uppercase tracking-widest text-black-400 dark:text-slate-500 mt-1">{label}</p>
               </div>
             ))}
           </div>
@@ -240,7 +240,7 @@ export default function Dashboard() {
             <div className="card-base lg:col-span-2">
               <div className="px-5 py-4 border-b border-slate-100 dark:border-white/5 flex items-center gap-2">
                 <BookOpen size={16} className="text-slate-500 dark:text-slate-400" />
-                <h3 className="font-semibold text-slate-800 dark:text-slate-300">Legal Tips for You</h3>
+                <h1 className="font-semibold text-slate-800 dark:text-slate-300">Legal Tips for You</h1>
               </div>
               <div className="p-6 space-y-4">
                 {[
@@ -253,8 +253,8 @@ export default function Dashboard() {
                       <Icon size={16} className={color} />
                     </div>
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{label}</p>
-                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">{tip}</p>
+                      <p className="text-[15px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{label}</p>
+                      <p className="text-md font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">{tip}</p>
                     </div>
                   </div>
                 ))}

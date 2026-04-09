@@ -59,7 +59,7 @@ export default function Sidebar({ isOpen, onClose }) {
             {/* Main Navigation */}
             <div className="space-y-10">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-6 px-4">Menu</p>
+                <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-slate-900 dark:text-slate-500 mb-6 px-4">Menu</p>
                 <nav className="space-y-1">
                   {navItems.map(({ icon: Icon, label, path }) => {
                     const active = location.pathname === path;
@@ -70,13 +70,13 @@ export default function Sidebar({ isOpen, onClose }) {
                         className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl transition-all duration-300 group
                           ${active
                             ? 'bg-navy-900 text-white shadow-xl shadow-navy active:scale-95'
-                            : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 hover:text-navy-600 dark:hover:text-navy-400'
+                            : 'text-slate-700 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/50 hover:text-navy-600 dark:hover:text-navy-400'
                           }`}
                       >
-                        <div className={`p-1.5 rounded-lg transition-colors ${active ? 'bg-navy-800' : 'bg-transparent group-hover:bg-navy-50 dark:group-hover:bg-navy-950'}`}>
+                        <div className={`p-1.5 rounded-lg transition-colors ${active ? 'bg-navy-800' : 'bg-transparent group-hover:bg-navy-100 dark:group-hover:bg-navy-950'}`}>
                           <Icon size={18} strokeWidth={active ? 2.5 : 2} />
                         </div>
-                        <span className={`text-[11px] font-black uppercase tracking-widest ${active ? 'opacity-100' : 'opacity-80 group-hover:opacity-100'}`}>{label}</span>
+                        <span className={`text-[12px] font-black uppercase tracking-widest ${active ? 'opacity-100' : 'opacity-80 group-hover:opacity-100'}`}>{label}</span>
                         {active && (
                           <div className="ml-auto w-1 h-4 rounded-full bg-navy-400/50" />
                         )}
