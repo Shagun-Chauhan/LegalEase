@@ -16,6 +16,9 @@ cloudinary.config({
 exports.getDraft = async (req, res) => {
   try {
     const { docType, form } = req.body;
+    if (!docType || !form) {
+      return res.status(400).json({ message: "Missing document type or form data" });
+    }
     const draftText = generateDraft(docType, form);
     res.status(200).json({ text: draftText });
   } catch (error) {
@@ -26,6 +29,9 @@ exports.getDraft = async (req, res) => {
 exports.finalizeDocument = async (req, res) => {
   try {
     const { docText, language, docType, issueType } = req.body;
+    if (!docText || !language || !docType) {
+      return res.status(400).json({ message: "Missing required document data" });
+    }
 
     let finalText = docText.replace(/\\n/g, "\n");
 
@@ -69,11 +75,10 @@ exports.finalizeDocument = async (req, res) => {
     doc.end();
 
     const pdfBuffer = await pdfBufferPromise;
-    // ✅ CLOUDINARY (FINAL WORKING CONFIG)
     const uploadResult = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          resource_type: "raw", // correct for PDFs
+          resource_type: "raw", 
           folder: "legalease_documents",
           public_id: `Document_${Date.now()}.pdf`,
           access_mode: "public",

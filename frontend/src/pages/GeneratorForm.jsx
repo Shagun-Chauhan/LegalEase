@@ -68,10 +68,21 @@ export default function GeneratorForm() {
     const e = {};
     if (!form.yourName.trim())                                    e.yourName     = 'Your name is required';
     if (form.yourEmail && !validateEmail(form.yourEmail))         e.yourEmail    = 'Enter a valid email address';
+    if (!form.yourAddress.trim())                                 e.yourAddress  = 'Physical address is required';
+    
     if (!form.opponentName.trim())                                e.opponentName = 'Opponent name is required';
     if (form.opponentEmail && !validateEmail(form.opponentEmail)) e.opponentEmail = 'Enter a valid email address';
+    if (!form.opponentAddress.trim())                             e.opponentAddress = 'Opponent address is required';
+    
     if (!form.description.trim())                                 e.description  = 'Description is required';
     if (form.description.trim().length < 30)                      e.description  = 'Please provide more detail (min 30 chars)';
+    
+    if (form.incidentDate) {
+      if (new Date(form.incidentDate) > new Date()) {
+        e.incidentDate = 'Incident date cannot be in the future';
+      }
+    }
+    
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -223,7 +234,7 @@ export default function GeneratorForm() {
                 </FieldWrapper>
 
                 <div className="sm:col-span-2">
-                  <FieldWrapper label="Primary Domicile" error={errors.yourAddress}>
+                  <FieldWrapper label="Primary Domicile" required error={errors.yourAddress}>
                     <div className="relative group">
                       <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                       <input
@@ -277,7 +288,7 @@ export default function GeneratorForm() {
                 </FieldWrapper>
 
                 <div className="sm:col-span-2">
-                  <FieldWrapper label="Service Address" error={errors.opponentAddress}>
+                  <FieldWrapper label="Service Address" required error={errors.opponentAddress}>
                     <div className="relative group">
                       <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                       <input
@@ -317,14 +328,13 @@ export default function GeneratorForm() {
                       <option>Tenant Dispute</option>
                       <option>Consumer Complaint</option>
                       <option>Property Dispute</option>
-                      <option>Cybercrime</option>
                       <option>Other</option>
                     </select>
                     <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   </div>
                 </FieldWrapper>
 
-                <FieldWrapper label="Temporal Log" error={errors.incidentDate}>
+                <FieldWrapper label="Temporal Log" required error={errors.incidentDate}>
                   <div className="relative group">
                     <Calendar size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors pointer-events-none" />
                     <input

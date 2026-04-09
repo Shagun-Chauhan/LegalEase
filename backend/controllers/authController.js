@@ -204,9 +204,11 @@ exports.updateProfile = async (req, res) => {
 
     const user = await User.findById(req.user.id);
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!name || name.trim().length < 2) {
+      return res.status(400).json({ message: "Valid name is required (min 2 chars)" });
+    }
 
-    user.name = name || user.name;
+    user.name = name.trim();
 
     if (req.file) {
       try {

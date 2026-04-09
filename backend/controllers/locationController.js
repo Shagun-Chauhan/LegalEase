@@ -4,32 +4,52 @@ const axios = require("axios");
 const searchCache = new Map();
 const CACHE_EXPIRY = 5 * 60 * 1000; // 5 minutes
 
-// List of public Overpass API mirrors to handle failover
+// List of public Overpass API mirrors for maximum reliability
 const MIRRORS = [
   "https://overpass-api.de/api/interpreter",
+  "https://lz4.overpass-api.de/api/interpreter",
+  "https://z.overpass-api.de/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter",
   "https://overpass.osm.ch/api/interpreter",
+  "https://overpass.be/api/interpreter",
   "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
 ];
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const fetchWithFailover = async (query) => {
   let latestError = null;
 
-  for (const mirror of MIRRORS) {
+  for (let i = 0; i < MIRRORS.length; i++) {
+    const mirror = MIRRORS[i];
     try {
-      const url = `${mirror}?data=[out:json][timeout:20];${query}out center;`;
+      const url = `${mirror}?data=[out:json][timeout:25];${query}out center;`;
       const response = await axios.get(url, {
-        headers: { 'User-Agent': 'LegalEase-Stability-System/2.0' },
-        timeout: 12000 // 12s timeout for faster failover
+        headers: { 
+          'User-Agent': 'LegalEase-Stability-System/3.0',
+          'Accept-Language': 'en-US,en;q=0.9'
+        },
+        timeout: 15000 // 15s timeout for better tolerance
       });
+
       if (response.data && response.data.elements) {
         return response.data;
       }
     } catch (err) {
       latestError = err;
-      console.warn(`Mirror ${mirror} failed or busy: ${err.message}`);
-      // Continue to next mirror if 429, 504, or timeout
-      continue;
+      const status = err.response?.status;
+      const isTransient = status === 429 || status >= 500 || err.code === 'ECONNABORTED';
+
+      console.warn(`Mirror ${mirror} failed (${status || err.code}): ${err.message}`);
+      
+      if (isTransient && i < MIRRORS.length - 1) {
+        console.log(`Retrying next mirror in 1s...`);
+        await sleep(1000); // 1s pause before switching mirrors
+        continue;
+      }
+      
+      // If it's a 400 (Bad Request), no point in retrying other mirrors
+      if (status === 400) throw err;
     }
   }
   throw latestError || new Error("All resource servers are currently unreachable.");

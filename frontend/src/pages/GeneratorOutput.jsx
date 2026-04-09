@@ -16,6 +16,8 @@ export default function GeneratorOutput() {
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
   const [finalizing, setFinalizing] = useState(false);
+  const [generatedPdf, setGeneratedPdf] = useState(null);
+  const [generatedDoc, setGeneratedDoc] = useState(null);
 
   const { form, docType, language } = location.state || {};
   const [docText, setDocText] = useState("Initializing intelligence synthesis... Establishing secure protocol with backend.");
@@ -47,9 +49,10 @@ export default function GeneratorOutput() {
 
   const handleDownload = async () => {
     if (!draftLoaded) return;
+  
     setFinalizing(true);
-    const toastId = toast.loading("Finalizing artifact and translating dynamically...", { duration: 15000 });
-
+    const toastId = toast.loading("Finalizing document...", { duration: 15000 });
+  
     try {
       const res = await generatorService.finalizeDocument({
         docText,
@@ -57,16 +60,20 @@ export default function GeneratorOutput() {
         docType: docType || 'general',
         issueType: form?.issueType
       });
-
-      if (res.data.document?.cloudinaryUrl) {
-        toast.success("Document finalized securely! Downloading PDF...", { id: toastId });
-        const url = res.data.document.cloudinaryUrl;
-
-        window.open(url, "_blank");
+  
+      const url = res.data.document?.cloudinaryUrl;
+  
+      if (url) {
+        toast.success("Document generated successfully!", { id: toastId });
+  
+        setGeneratedPdf(url);
+        setGeneratedDoc(res.data.document);
       }
+  
     } catch (err) {
       toast.error("Finalization failed: " + (err.response?.data?.message || err.message), { id: toastId });
     }
+  
     setFinalizing(false);
   };
 
@@ -162,16 +169,48 @@ export default function GeneratorOutput() {
               </pre>
             )}
           </div>
+          {generatedPdf && (
+  <div className="mt-6 p-6 rounded-3xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/30">
+    
+    <p className="text-[12px] font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400 mb-2">
+      Document Generated Successfully
+    </p>
+
+    <h3 className="text-md font-bold text-slate-800 dark:text-white mb-4">
+      Your PDF is ready
+    </h3>
+
+    <div className="flex flex-wrap gap-3">
+
+      {/* Preview */}
+      <button
+        onClick={() => window.open(generatedPdf, "_blank")}
+        className="px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 text-sm font-semibold hover:border-navy-300 transition"
+      >
+        Preview PDF
+      </button>
+
+      {/* Dashboard */}
+      <button
+        onClick={() => navigate("/dashboard", { state: { refresh: true } })}
+        className="px-4 py-2 rounded-xl border border-slate-200 dark:border-white/5 text-sm font-semibold hover:border-navy-300 transition"
+      >
+        Go to Dashboard
+      </button>
+
+    </div>
+  </div>
+)}
 
           {/* Bottom Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="flex justify-center mt-6">
             <button
               onClick={handleDownload}
               disabled={!draftLoaded || finalizing}
-              className="btn-primary flex items-center justify-center gap-2 py-4 rounded-2xl font-black uppercase tracking-widest text-xs disabled:opacity-50"
+              className="btn-primary flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs disabled:opacity-50"
             >
-              {finalizing ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-              {finalizing ? "Translating & Encoding PDF..." : "Encode & Download PDF"}
+              {finalizing ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle size={16} />}
+              {finalizing ? "Finalizing Document..." : "Finalize & Save Document"}
             </button>
           </div>
         </div>
