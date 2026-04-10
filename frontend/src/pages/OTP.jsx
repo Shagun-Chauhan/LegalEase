@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Scale, ArrowLeft, RefreshCw, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { Scale, ArrowLeft, RefreshCw, Mail, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import authService from "../services/authService";
 
@@ -132,7 +132,7 @@ const handleResend = async () => {
           >
             <ArrowLeft size={14} className="group-hover/back:-translate-x-1 transition-transform" /> Back
           </button>
-
+          
           {/* Header */}
           <div className="mb-10 mt-4 relative z-10">
             <div className="w-16 h-16 bg-navy-50 dark:bg-navy-950/40 rounded-3xl mx-auto mb-4 flex items-center justify-center border border-navy-100 dark:border-navy-900/30">

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Scale, Mail, Lock, Eye, EyeOff, ArrowRight, Shield, CheckCircle, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import authService from "../services/authService";
 import toast from 'react-hot-toast';
@@ -160,6 +160,13 @@ export default function Login() {
         {/* Card */}
         <div className="card-base p-8 md:p-10 shadow-2xl shadow-slate-200 dark:shadow-none border-slate-200 dark:border-white/10 relative overflow-hidden group">
           <div className="absolute -top-24 -right-24 w-48 h-48 bg-navy-500/5 dark:bg-navy-500/10 rounded-full group-hover:scale-110 transition-transform duration-700" />
+
+          <button
+            onClick={() => navigate('/')}
+            className="absolute top-6 left-6 flex items-center gap-2 text-[10px] font-bold text-slate-400 dark:text-slate-500 hover:text-navy-600 dark:hover:text-navy-400 transition-all uppercase tracking-widest group/back z-20"
+          >
+            <ArrowLeft size={14} className="group-hover/back:-translate-x-1 transition-transform" /> Back
+          </button>
 
           {/* ── SIGN IN ── */}
           {mode === 'login' && (

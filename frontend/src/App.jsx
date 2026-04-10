@@ -14,18 +14,28 @@ import ResultPage from './pages/ResultPage';
 import GeneratorForm from './pages/GeneratorForm';
 import GeneratorOutput from './pages/GeneratorOutput';
 import Profile from './pages/Profile';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Legal from './pages/Legal';
+import Blog from './pages/Blog';
 import ProtectedRoute from './components/ProtectedRoute';
+import ScrollToTop from './components/ScrollToTop';
 export default function App() {
   return (
     <ThemeProvider>
       <Toaster position="top-center" reverseOrder={false} />
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/otp" element={<OTP />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/legal/:section" element={<Legal />} />
+          <Route path="/blog" element={<Blog />} />
 
           {/* Protected Routes */}
           <Route 

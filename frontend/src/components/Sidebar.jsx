@@ -60,6 +60,8 @@ export default function Sidebar({ isOpen, onClose }) {
             <div className="space-y-10">
               <div>
                 <p className="text-[13px] font-bold uppercase tracking-[0.2em] text-slate-900 dark:text-slate-500 mb-6 px-4">Menu</p>
+                <div className="h-px bg-black dark:bg-white/10 mx-4 mt-8" />
+
                 <nav className="space-y-1">
                   {navItems.map(({ icon: Icon, label, path }) => {
                     const active = location.pathname === path;
