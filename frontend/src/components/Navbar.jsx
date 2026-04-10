@@ -111,7 +111,16 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
 
           {/* Center: Search */}
           <div className="hidden md:flex flex-1 max-w-lg mx-16">
-            <div className="relative w-full group">
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (search.trim()) {
+                  navigate('/issues', { state: { search } });
+                  setSearchFocused(false);
+                }
+              }}
+              className="relative w-full group"
+            >
               <div className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-transparent via-navy-500/50 to-transparent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 border-black" />
               <Search size={14} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-navy-500 transition-colors" />
               <input
@@ -154,7 +163,7 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
                   )}
                 </div>
               )}
-            </div>
+            </form>
           </div>
 
           {/* Right: Actions */}
@@ -163,11 +172,11 @@ export default function Navbar({ onMenuToggle, menuOpen, user: propUser }) {
             {/* Location button */}
             <button
               onClick={() => { closeAll(); setLocationOpen(true); }}
-              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 group ${savedCity ? 'bg-navy-50 dark:bg-navy-950/30 text-navy-700 dark:text-navy-400' : 'text-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 group ${savedCity ? 'bg-navy-50 dark:bg-navy-950 text-navy-700 dark:text-white' : 'text-white hover:bg-slate-100 dark:hover:bg-slate-800'}`}
               title="Find nearby courts and legal offices"
             >
-              <MapPin size={18} className={savedCity ? 'text-navy-600' : 'group-hover:text-navy-600 transition-colors'} />
-              <span className="hidden lg:block text-md font-bold truncate max-w-[100px] text-slate-700">
+              <MapPin size={18} className={savedCity ? 'text-white' : 'group-hover:text-white transition-colors'} />
+              <span className="hidden lg:block text-md font-bold truncate max-w-[100px] text-white">
                 {savedCity || 'Nearby'}
               </span>
             </button>

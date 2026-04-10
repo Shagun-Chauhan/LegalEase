@@ -3,7 +3,7 @@ import {
   AlertTriangle, DollarSign, Home, Briefcase, Car, CreditCard,
   Users, ShieldAlert, Scale, ArrowRight, Search, ChevronRight
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import AIChat from '../components/AIChat';
@@ -103,8 +103,9 @@ import authService from '../services/authService';
 
 export default function IssueSelection() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(location.state?.search || '');
   const [selected, setSelected] = useState(null);
   const [user, setUser] = useState(null);
   const [chatOpen, setChatOpen] = useState(false);

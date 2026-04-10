@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Scale, ArrowRight, Shield, Zap, FileText, Search, MapPin, CheckCircle, Globe, Award, Users, Star } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import PublicNavbar from '../components/PublicNavbar';
 import FeatureCard from '../components/FeatureCard';
 
@@ -270,27 +270,27 @@ export default function LandingPage() {
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6">Platform</h4>
               <ul className="space-y-4">
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Analysis</a></li>
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Generator</a></li>
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Nearby Case</a></li>
+                <li><a href="#features" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Analysis</a></li>
+                <li><Link to="/generate" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Generator</Link></li>
+                <li><a href="#how-it-works" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">How it Works</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6">Legal</h4>
               <ul className="space-y-4">
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Privacy</a></li>
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Terms</a></li>
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Vault Policy</a></li>
+                <li><Link to="/legal/privacy" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Privacy</Link></li>
+                <li><Link to="/legal/terms" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Terms</Link></li>
+                <li><Link to="/legal/vault" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Vault Policy</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-white mb-6">Company</h4>
               <ul className="space-y-4">
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">About</a></li>
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Contact</a></li>
-                <li><a href="#" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Blog</a></li>
+                <li><Link to="/about" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">About</Link></li>
+                <li><Link to="/contact" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Contact</Link></li>
+                <li><Link to="/blog" className="text-xs font-bold text-slate-400 hover:text-navy-600 dark:hover:text-navy-400 transition-colors uppercase tracking-widest">Blog</Link></li>
               </ul>
             </div>
           </div>
@@ -299,11 +299,7 @@ export default function LandingPage() {
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 md:mb-0">
               © 2026 LegalEase AI. All rights reserved.
             </p>
-            <div className="flex items-center gap-6">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Twitter</span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">LinkedIn</span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Github</span>
-            </div>
+
           </div>
         </div>
       </footer>
