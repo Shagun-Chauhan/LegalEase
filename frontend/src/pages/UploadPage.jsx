@@ -86,7 +86,8 @@ export default function UploadPage() {
       toast.success("Analysis complete");
 
     } catch (err) {
-      toast.error("Upload failed: " + (err.response?.data?.message || err.message));
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message;
+      toast.error("Analysis failed: " + errorMsg);
     } finally {
       setAnalyzing(false);
     }

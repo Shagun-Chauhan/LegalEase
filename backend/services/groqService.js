@@ -1,51 +1,63 @@
-const axios = require("axios");
+const Groq = require("groq-sdk");
 
-const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.1-8b-instant";
+async function analyzeWithGroq(documentText, schemaProperties) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("GROQ_API_KEY is not set");
 
+  const groq = new Groq({ apiKey });
 
-const getGroqResponse = async (messages) => {
+  const prompt = `
+    You are an expert legal assistant AI.
+    
+    Analyze the following legal document and return ONLY valid JSON matching this structure:
+    ${JSON.stringify(schemaProperties, null, 2)}
+    
+    Instructions:
+    - Use simple, clear language.
+    - keyPoints and redFlags MUST be arrays of short strings.
+    - riskScore MUST be a number between 1-10.
+    - return valid JSON only.
+    
+    DOCUMENT:
+    ${documentText}
+  `;
+
   try {
-    const response = await axios.post(
-      GROQ_API_URL,
-      {
-        model: MODEL,
-        messages,
-        temperature: 0.7,
-        max_tokens: 300,
-        top_p: 1,
-        stream: false,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        timeout: 30000, 
-      }
-    );
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.1,
+      response_format: { type: "json_object" },
+    });
 
-    const reply = response.data?.choices?.[0]?.message?.content;
+    const content = chatCompletion.choices[0]?.message?.content;
+    return JSON.parse(content);
 
-    if (!reply) {
-      throw new Error("Empty response received from Groq API.");
-    }
-
-    return reply.trim();
-  } catch (error) {
-    if (error.response) {
-      const status = error.response.status;
-      const errMsg = error.response.data?.error?.message || "Unknown API error";
-      console.error(`❌ Groq API error [${status}]: ${errMsg}`);
-      throw new Error(`Groq API error (${status}): ${errMsg}`);
-    } else if (error.code === "ECONNABORTED") {
-      console.error("❌ Groq API request timed out.");
-      throw new Error("Groq API request timed out. Please try again.");
-    } else {
-      console.error(`❌ Groq service error: ${error.message}`);
-      throw error;
-    }
+  } catch (err) {
+    console.error("Groq Analysis Error:", err.message);
+    throw new Error(`Groq API Error: ${err.message}`);
   }
-};
+}
 
-module.exports = { getGroqResponse };
+async function getGroqResponse(messages) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) throw new Error("GROQ_API_KEY is not set");
+
+  const groq = new Groq({ apiKey });
+
+  try {
+    const chatCompletion = await groq.chat.completions.create({
+      messages: messages,
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.7,
+    });
+
+    return chatCompletion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
+
+  } catch (err) {
+    console.error("Groq Chat Error:", err.message);
+    throw new Error(`Groq API Error: ${err.message}`);
+  }
+}
+
+module.exports = { analyzeWithGroq, getGroqResponse };

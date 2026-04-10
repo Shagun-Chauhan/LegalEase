@@ -1,4 +1,5 @@
 const { GoogleGenerativeAI, SchemaType } = require("@google/generative-ai");
+const { analyzeWithGroq } = require("./groqService");
 
 const MAX_CHARS = 35000; 
 
@@ -50,86 +51,97 @@ async function analyzeLegalDocument(documentText) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("GEMINI_API_KEY is not set");
 
-  const genAI = new GoogleGenerativeAI(apiKey);
-
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: schema,
-    },
-  });
-
   const trimmedText = documentText.length > MAX_CHARS 
     ? documentText.slice(0, MAX_CHARS) 
     : documentText;
 
-    const prompt = `
-    You are an expert legal assistant AI.
-    
-    Analyze the following legal document and return ONLY valid JSON.
-    
-    Instructions:
-    - Use simple, clear language
-    - Do NOT return paragraphs where lists are needed
-    - keyPoints MUST be short bullet points
-    - redFlags MUST highlight risky clauses
-    - simpleExplanation should be very easy to understand (like explaining to a beginner)
-    
-    Return in this format:
-    
-    {
-      "documentSummary": "...",
-    
-      "keyPoints": [
-        "point 1",
-        "point 2"
-      ],
-    
-      "legalProcessType": "...",
-      "estimatedTime": "...",
-      "estimatedCost": "...",
-    
-      "successProbability": "High/Medium/Low with reason",
-    
-      "riskAnalysis": "...",
-    
-      "riskLevel": "Low/Medium/High",
-    
-      "riskScore": number between 1-10,
-    
-      "dominantParty": "Client / Service Provider / Neutral",
-    
-      "redFlags": [
-        "Risk 1",
-        "Risk 2"
-      ],
-    
-      "simpleExplanation": "Explain this in very simple terms"
+  // FALLBACK CHAIN
+  const configs = [
+    { model: "gemini-1.5-flash", version: "v1beta", useSchema: true },
+    { model: "gemini-1.5-flash", version: "v1", useSchema: false },
+    { model: "gemini-pro", version: "v1", useSchema: false }, // Legacy 1.0 Pro
+    { model: "gemini-1.5-pro", version: "v1beta", useSchema: true },
+    { model: "gemini-2.0-flash-exp", version: "v1beta", useSchema: true },
+  ];
+
+  let lastError = null;
+
+  for (const config of configs) {
+    try {
+      console.log(`[AI] Attempting ${config.model} (${config.version}, schema: ${config.useSchema})...`);
+      
+      const genAI = new GoogleGenerativeAI(apiKey, { apiVersion: config.version });
+      
+      let model;
+      let result;
+
+      if (config.useSchema) {
+        model = genAI.getGenerativeModel({
+          model: config.model,
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: schema,
+          },
+        });
+        
+        const prompt = `Analyze this legal document and return valid JSON matching the schema.\n\nDOCUMENT:\n${trimmedText}`;
+        result = await model.generateContent(prompt);
+      } else {
+        model = genAI.getGenerativeModel({ model: config.model });
+        
+        const prompt = `
+          Analyze this legal document and return ONLY valid JSON.
+          Schema structure: ${JSON.stringify(schema.properties)}
+          
+          DOCUMENT:
+          ${trimmedText}
+        `;
+        result = await model.generateContent(prompt);
+      }
+
+      const text = result.response.text();
+      const parsed = JSON.parse(text.replace(/```json|```/g, "").trim());
+      
+      console.log(`[AI] SUCCESS with ${config.model} (${config.version})`);
+      return parsed;
+
+    } catch (err) {
+      console.warn(`[AI] ${config.model} (${config.version}) failed:`, err.message);
+      lastError = err;
+      continue;
     }
+  }
+
+  // ULTIMATE FALLBACK: GROQ
+  try {
+    console.log("[AI] Attempting Ultimate Fallback: Groq (Llama-3.3)");
+    return await analyzeWithGroq(trimmedText, schema.properties);
+  } catch (groqErr) {
+    console.error("[AI] Groq fallback also failed:", groqErr.message);
+    throw new Error(`AI API failed all fallbacks (Gemini & Groq). Last error: ${groqErr.message}`);
+  }
+}
+
+async function callGemini(model, documentText) {
+  const trimmedText = documentText.length > MAX_CHARS 
+    ? documentText.slice(0, MAX_CHARS) 
+    : documentText;
+
+  const prompt = `
+    Analyze the following legal document and return valid JSON matching the provided schema.
     
     DOCUMENT:
     ${trimmedText}
-    `;
+  `;
 
+  const result = await model.generateContent(prompt);
+  const text = result.response.text();
+  
   try {
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    let parsed;
-      try {
-        parsed = JSON.parse(text);
-      } catch (e) {
-        console.error("Raw AI response:", text);
-        throw new Error("Invalid AI JSON format");
-      }
-
-      return parsed;
-  } catch (err) {
-    console.error("Gemini API Error:", err.message);
-    if (err.message.includes("429")) {
-      throw new Error("API Quota exceeded. Please wait a moment or check your Google AI Studio billing.");
-    }
-    throw new Error("Failed to analyze document. Please try again later.");
+    return JSON.parse(text);
+  } catch (e) {
+    console.error("Raw AI response failed to parse:", text);
+    throw new Error("Invalid AI JSON format");
   }
 }
 
