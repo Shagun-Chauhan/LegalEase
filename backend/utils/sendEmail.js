@@ -1,4 +1,8 @@
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+
+// Force IPv4 resolution to prevent ENETUNREACH (IPv6) errors on Render/other hosting platforms
+dns.setDefaultResultOrder("ipv4first");
 
 const sendEmail = async (to, otp, emailType = "OTP") => {
   try {
