@@ -45,7 +45,20 @@ exports.register = async (req, res) => {
     res.json({ message: "OTP sent to email" });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("❌ Registration/Email Error Details:", error);
+
+    // Check if error is related to email sending
+    if (error.message.includes("Email delivery failed")) {
+      return res.status(502).json({
+        message: "User registered, but failed to send OTP email. Please wait and try resending OTP.",
+        errorDetails: error.message
+      });
+    }
+
+    res.status(500).json({
+      message: "Server error during registration",
+      errorDetails: error.message || error
+    });
   }
 };
 
