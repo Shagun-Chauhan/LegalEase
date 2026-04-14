@@ -14,6 +14,9 @@ const sendEmail = async (to, otp, emailType = "OTP") => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s/g, "") : "",
       },
+      tls: {
+        rejectUnauthorized: false // Fixes "self-signed certificate in certificate chain" on Render
+      },
       connectionTimeout: 10000, // 10 seconds timeout
       greetingTimeout: 10000,
       socketTimeout: 10000,
