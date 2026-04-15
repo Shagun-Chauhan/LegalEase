@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   MapPin, Navigation, Search, X, ChevronRight,
   Building2, Shield, Scale, Phone, Clock, Star,
-  AlertCircle, Loader2, ExternalLink, RefreshCw
+  AlertCircle, Loader2, ExternalLink, RefreshCw,
+  History, Map, Globe, Wifi, Clock3, TrendingUp
 } from 'lucide-react';
 
 import MapView from './MapView';
@@ -34,6 +35,9 @@ export default function LocationPicker({ onClose, onCitySelect }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [placeSearchQuery, setPlaceSearchQuery] = useState('');
+  const [recentSearches, setRecentSearches] = useState(JSON.parse(localStorage.getItem('recentLocationSearches') || '[]'));
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const fetchPlaces = async (lat, lng, type = "all") => {
     try {
@@ -64,6 +68,19 @@ export default function LocationPicker({ onClose, onCitySelect }) {
   useEffect(() => {
     if (step === 'manual' && searchRef.current) searchRef.current.focus();
   }, [step]);
+
+  useEffect(() => {
+    if (searchQuery.length > 1) {
+      const timeoutId = setTimeout(() => {
+        fetchLocationSuggestions(searchQuery);
+        setShowSuggestions(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    } else {
+      setSearchSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     if (location?.lat) {
@@ -98,27 +115,67 @@ export default function LocationPicker({ onClose, onCitySelect }) {
     );
   };
 
-  const selectCity = async (city) => {
+  const addToRecentSearches = (city) => {
+    const updated = [city, ...recentSearches.filter(s => s !== city)].slice(0, 5);
+    setRecentSearches(updated);
+    localStorage.setItem('recentLocationSearches', JSON.stringify(updated));
+  };
+
+  const fetchLocationSuggestions = async (query) => {
+    if (query.length < 2) {
+      setSearchSuggestions([]);
+      return;
+    }
+    
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=5&addressdetails=1`
+      );
+      const data = await res.json();
+      const suggestions = data.map(item => ({
+        display: item.display_name.split(',')[0],
+        full: item.display_name,
+        lat: item.lat,
+        lng: item.lon,
+        type: item.type
+      }));
+      setSearchSuggestions(suggestions);
+    } catch (err) {
+      console.error("Error fetching suggestions:", err);
+    }
+  };
+
+  const selectCity = async (city, coords = null) => {
     try {
       setLoading(true);
       setError('');
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${city}&limit=1`
-      );
-    
-      const data = await res.json();
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon);
       
-        const newLoc = { city, lat, lng, display: city };
-        setLocation(newLoc);
-        if (onCitySelect) onCitySelect(city);
-        fetchPlaces(lat, lng, filter);
+      let lat, lng;
+      if (coords) {
+        lat = coords.lat;
+        lng = coords.lng;
       } else {
-        setGpsError(`Could not find location for ${city}`);
-        setStep("choose");
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${city}&limit=1`
+        );
+        const data = await res.json();
+        if (data && data.length > 0) {
+          lat = parseFloat(data[0].lat);
+          lng = parseFloat(data[0].lon);
+        } else {
+          setGpsError(`Could not find location for ${city}`);
+          setStep("choose");
+          return;
+        }
       }
+      
+      const newLoc = { city, lat, lng, display: city };
+      setLocation(newLoc);
+      addToRecentSearches(city);
+      if (onCitySelect) onCitySelect(city);
+      fetchPlaces(lat, lng, filter);
+      setSearchQuery('');
+      setShowSuggestions(false);
     } catch (err) {
       console.error("Error selecting city:", err);
       setError("Failed to resolve city coordinates");
@@ -235,18 +292,82 @@ export default function LocationPicker({ onClose, onCitySelect }) {
                     value={searchQuery}
                     onChange={e => { setSearchQuery(e.target.value); if (step !== 'manual') setStep('manual'); }}
                     onKeyDown={e => e.key === 'Enter' && selectCity(searchQuery)}
+                    onFocus={() => setShowSuggestions(true)}
                     placeholder="Enter sector or municipal district..."
-                    className="w-full pl-14 pr-6 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900 text-xs font-black uppercase tracking-widest focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-navy-500/5 focus:border-navy-500/20 outline-none transition-all"
+                    className="w-full pl-14 pr-20 py-5 rounded-3xl border border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-900 text-xs font-black uppercase tracking-widest focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-navy-500/5 focus:border-navy-500/20 outline-none transition-all"
                   />
-                  {searchQuery && (
-                    <button onClick={() => { setSearchQuery(''); setStep('choose'); }} className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                      <X size={14} className="text-slate-400" />
-                    </button>
-                  )}
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                    {searchQuery && (
+                      <button 
+                        onClick={() => { setSearchQuery(''); setSearchSuggestions([]); setShowSuggestions(false); }} 
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-all group"
+                        title="Clear search"
+                      >
+                        <X size={14} className="text-slate-400 group-hover:text-red-500 transition-colors" />
+                      </button>
+                    )}
+                    {loading && (
+                      <div className="p-2">
+                        <Loader2 size={14} className="text-navy-500 animate-spin" />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
+                {/* Recent Searches */}
+                {recentSearches.length > 0 && step === 'manual' && !searchQuery && (
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <History size={14} className="text-slate-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Recent Searches</span>
+                      </div>
+                      <button 
+                        onClick={() => { setRecentSearches([]); localStorage.removeItem('recentLocationSearches'); }}
+                        className="text-[9px] text-slate-400 hover:text-red-500 transition-colors"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {recentSearches.map((term, index) => (
+                        <button
+                          key={index}
+                          onClick={() => selectCity(term)}
+                          className="group px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-300 hover:bg-navy-50 dark:hover:bg-navy-950/20 hover:text-navy-700 dark:hover:text-navy-400 transition-all border border-transparent hover:border-navy-200 dark:hover:border-navy-800 flex items-center gap-1"
+                        >
+                          <Clock3 size={10} className="opacity-50" />
+                          {term}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Search Suggestions */}
+                {showSuggestions && searchSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-white/10 shadow-xl z-20 overflow-hidden animate-fade-in">
+                    {searchSuggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        onClick={() => selectCity(suggestion.display, { lat: parseFloat(suggestion.lat), lng: parseFloat(suggestion.lng) })}
+                        className="w-full flex items-start gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-b border-slate-50 dark:border-white/5 last:border-0 text-left group"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-navy-50 dark:bg-navy-950/20 flex items-center justify-center flex-shrink-0 group-hover:bg-navy-100 dark:group-hover:bg-navy-900/30 transition-colors">
+                          <MapPin size={14} className="text-navy-600 dark:text-navy-400" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{suggestion.display}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{suggestion.full}</p>
+                        </div>
+                        <ChevronRight size={14} className="text-slate-400 group-hover:text-navy-600 transition-colors" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {/* City suggestions when searching */}
-                {step === 'manual' && (
+                {step === 'manual' && !showSuggestions && (
                   <div className="card-base overflow-hidden animate-slide-up shadow-xl shadow-slate-200 dark:shadow-none border-slate-200 dark:border-white/10">
                     {filteredSearch.map(city => (
                       <button
@@ -261,7 +382,7 @@ export default function LocationPicker({ onClose, onCitySelect }) {
                         <ChevronRight size={14} className="ml-auto text-slate-300 group-hover:text-navy-400 transition-colors" />
                       </button>
                     ))}
-                    {searchQuery.length > 2 && (
+                    {searchQuery.length > 2 && searchSuggestions.length === 0 && (
                       <button
                         onClick={() => selectCity(searchQuery)}
                         className="w-full flex items-center gap-4 px-5 py-4 bg-navy-50/30 dark:bg-navy-950/10 hover:bg-navy-50 dark:hover:bg-navy-950/20 transition-colors text-navy-700 dark:text-navy-400"
@@ -280,18 +401,62 @@ export default function LocationPicker({ onClose, onCitySelect }) {
               {/* Popular cities */}
               {step === 'choose' && (
                 <div className="animate-fade-in">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-6 px-1">Major Hubs</p>
+                  <div className="flex items-center justify-between mb-6">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Major Hubs</p>
+                    <div className="flex items-center gap-2 text-[9px] text-slate-400">
+                      <TrendingUp size={10} />
+                      <span>Trending</span>
+                    </div>
+                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {popularCities.map(city => (
+                    {popularCities.map((city, index) => (
                       <button
                         key={city}
                         onClick={() => selectCity(city)}
-                        className="px-4 py-3 rounded-2xl border border-slate-100 dark:border-white/5 text-[9px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-[0.2em]
-                                   hover:border-navy-300 dark:hover:border-navy-800 hover:text-navy-700 dark:hover:text-navy-400 hover:bg-navy-50 dark:hover:bg-navy-950/20 transition-all shadow-sm active:scale-95"
+                        className="group relative px-4 py-3 rounded-2xl border border-slate-100 dark:border-white/5 text-[9px] text-slate-500 dark:text-slate-400 font-black uppercase tracking-[0.2em]
+                                   hover:border-navy-300 dark:hover:border-navy-800 hover:text-navy-700 dark:hover:text-navy-400 hover:bg-navy-50 dark:hover:bg-navy-950/20 transition-all shadow-sm active:scale-95 overflow-hidden"
                       >
-                        {city}
+                        <div className="absolute inset-0 bg-gradient-to-r from-navy-500/0 to-navy-500/5 group-hover:from-navy-500/10 group-hover:to-navy-500/0 transition-all" />
+                        <span className="relative">{city}</span>
+                        {index < 3 && (
+                          <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        )}
                       </button>
                     ))}
+                  </div>
+                  
+                  {/* Quick Access Options */}
+                  <div className="mt-8 space-y-3">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Quick Access</p>
+                    <div className="grid grid-cols-1 gap-3">
+                      <button
+                        onClick={() => detectGPS()}
+                        className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 dark:border-white/5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-950/30 dark:hover:to-indigo-950/30 transition-all group"
+                      >
+                        <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                          <Wifi size={18} className="text-white" />
+                        </div>
+                        <div className="text-left flex-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">Use Current Location</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">Auto-detect your location</p>
+                        </div>
+                        <ChevronRight size={16} className="text-slate-400 group-hover:text-blue-600 transition-colors" />
+                      </button>
+                      
+                      <button
+                        onClick={() => { setStep('manual'); setSearchQuery(''); }}
+                        className="flex items-center gap-4 p-4 rounded-2xl border border-slate-100 dark:border-white/5 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/20 dark:to-green-950/20 hover:from-emerald-100 hover:to-green-100 dark:hover:from-emerald-950/30 dark:hover:to-green-950/30 transition-all group"
+                      >
+                        <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                          <Globe size={18} className="text-white" />
+                        </div>
+                        <div className="text-left flex-1">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white">Browse Locations</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">Search any location manually</p>
+                        </div>
+                        <ChevronRight size={16} className="text-slate-400 group-hover:text-emerald-600 transition-colors" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
