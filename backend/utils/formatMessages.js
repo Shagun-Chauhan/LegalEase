@@ -41,4 +41,3 @@ const formatMessages = (userMessage) => {
 
 module.exports = { formatMessages, SYSTEM_PROMPT };
 
-// Comment
