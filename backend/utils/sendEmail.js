@@ -8,8 +8,9 @@ const sendEmail = async (to, otp, emailType = "OTP") => {
   try {
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 465,
-      secure: true, // Use SSL/TLS
+      port: 587,
+      secure: false, // false for 587 (uses STARTTLS)
+      requireTLS: true, 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS ? process.env.EMAIL_PASS.replace(/\s/g, "") : "",
@@ -17,9 +18,9 @@ const sendEmail = async (to, otp, emailType = "OTP") => {
       tls: {
         rejectUnauthorized: false // Fixes "self-signed certificate in certificate chain" on Render
       },
-      connectionTimeout: 10000, // 10 seconds timeout
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
+      connectionTimeout: 20000, // Increased to 20 seconds for slow Render cold starts
+      greetingTimeout: 20000,
+      socketTimeout: 20000,
     });
 
     let subject, text;
